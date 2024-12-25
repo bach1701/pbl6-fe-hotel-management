@@ -417,7 +417,7 @@ const Index = ()=>{
                             </div>
                             <div class="utf_carousel_review_part">
                                 <div class="utf_testimonial_author"> 
-                                    <img src="images/duybach.jpeg" alt=""/>
+                                    <img src="images/duybach.jpg" alt=""/>
                                     <h4>Duy Bách<span>Web Developer</span><span>phamduybach.dut.udn@gmail.com </span></h4>
                                 </div>
                             </div>
