@@ -47,24 +47,6 @@ const ForgotPassword = () => {
         }).then((result) => {
             if(result.isConfirmed) {
                 forgotPassword()
-                // const URL = `${API_BASE_URL}/user/api/userauths/auth/reset-password/`
-                // const data = {
-                //     email: email
-                // }
-                // try {
-                //     const reponse = await axios.post(URL, data);
-                //     console.log(reponse.data);
-                //     Swal.fire({
-                //         icon: 'success',
-                //         title: 'Thành công!',
-                //         text: 'Vui lòng kiểm tra email của bạn.',
-                //         showConfirmButton: false,
-                //         timer: 2000
-                //     })
-                // }
-                // catch (error) {
-                //     console.log(error);
-                // }
             }
             else {
                 console.log("Reset password cancelled.");

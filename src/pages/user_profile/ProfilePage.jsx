@@ -25,7 +25,6 @@ const ProfilePage = () => {
     },[]);
 
     const fetchProfile = async () => {
-        console.log("1");
         const URL = `${API_BASE_URL}/user/api/userauths/profile/`;
         try {
             const response = await apiRequest(URL);
@@ -33,11 +32,9 @@ const ProfilePage = () => {
             setInforUser(response.data.user);
             setEditableProfile(response.data.profile);
             console.log(response.data);
-            console.log("2");
         }
         catch (err) {
             console.error(err);
-            console.log("3");
         }
     }
     

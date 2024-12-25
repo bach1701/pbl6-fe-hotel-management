@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import axios from 'axios';
-import { useAuth } from "../../auth/AuthContext";
 import { Link } from "react-router-dom";
 import { useRoomCount } from '../RoomCountContext/RoomCountContext';
 import API_BASE_URL from '../../../config/apiConfig';
@@ -12,10 +10,7 @@ import { apiRequest } from '../../../utils/api';
 
 const SelectedRoom = () => {
 
-    const { token } = useAuth();
-    const [cart, setCart] = useState({});
     const [hotels, setHotels] = useState([]);
-    const [roomType, setRoomType] = useState({});
     const [selectedRoom, setSelectedRoom] = useState(null);
     const { setRoomCount } = useRoomCount();
     const baseURL = API_BASE_URL;
@@ -23,7 +18,7 @@ const SelectedRoom = () => {
 
 
     const fetchCart = async() => {
-        const URL = `${baseURL}/api/view_cart`;
+        const URL = `${baseURL}/api/view_cart/`;
         try {
             const response = await apiRequest(URL);
             console.log(response);
@@ -38,7 +33,7 @@ const SelectedRoom = () => {
     }
 
     const deleteCartItem = async (id) => {
-        const URL = `${baseURL}/api/delete_cart_item`;
+        const URL = `${baseURL}/api/delete_cart_item/`;
         const data = {
             item_cart_id: id
         };

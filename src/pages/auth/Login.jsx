@@ -43,13 +43,10 @@ const Login = () => {
                 localStorage.setItem('accessToken', response.data.access);
                 localStorage.setItem('refreshToken', response.data.refresh);
                 login(localStorage.getItem('accessToken'));
-                // login(response.data.access); 
                 if (redirectUrl) {
                     localStorage.removeItem('redirectUrl'); 
-                    // window.location.href = redirectUrl; 
                     navigate(redirectUrl);
                 } else {
-                    // window.location.href = '/'; 
                     navigate('/');
                 }
                 Swal.fire({

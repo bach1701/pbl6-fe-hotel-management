@@ -14,7 +14,7 @@ const SuccessPayment = () => {
     const { setRoomCount } = useRoomCount();
 
     const fetchCart = async() => {
-        const URL = `${baseURL}/api/view_cart`;
+        const URL = `${baseURL}/api/view_cart/`;
         try {
             const response = await apiRequest(URL);
             console.log(response);
@@ -41,7 +41,7 @@ const SuccessPayment = () => {
             }
         }
         const handleDeleteCartItem = async (id) => {
-            const URL = `${baseURL}/api/delete_cart_item`;
+            const URL = `${baseURL}/api/delete_cart_item/`;
             const data = {
                 item_cart_id: id
             }

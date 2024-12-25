@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from "react";
-import Header from "../../baseComponent/Header";
 import { useParams } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
@@ -62,21 +61,18 @@ const CheckRoomAvailability = () => {
                 console.log(responseRoomAvailability.data.room_type);
                 setNameHotel(responseRoomAvailability.data.hotel)
                 console.log(responseRoomAvailability.data.hotel);
-                const responseListRoomType = await axios.get(`${baseURL}/api/hotels/${slug}/room-types`);
+                const responseListRoomType = await axios.get(`${baseURL}/api/hotels/${slug}/room-types/`);
                 console.log(responseListRoomType.data.roomtype);
                 setListRoomTypes(responseListRoomType.data.roomtype)
             } catch (error) {
-                // Kiểm tra nếu có lỗi từ server
                 if (error.response) {
-                    // Nếu server trả về lỗi với mã không phải 2xx
                     const errorMessage = error.response.data.message || 'Có lỗi xảy ra.';
                     if (errorMessage === 'No rooms available for the selected criteria.') {
-                        alert('Không có phòng phù hợp với tiêu chí đã chọn.'); // Hiển thị thông báo lỗi
+                        alert('Không có phòng phù hợp với tiêu chí đã chọn.'); 
                     } else {
-                        alert(errorMessage); // Hiển thị thông báo lỗi khác
+                        alert(errorMessage); 
                     }
                 } else {
-                    // Nếu không có phản hồi từ server
                     alert('Không thể kết nối tới server.');
                 }
                 setError(error);
@@ -84,7 +80,7 @@ const CheckRoomAvailability = () => {
         };
 
         const fetchCartItemCount = async () => {
-            const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count`; 
+            const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count/`; 
             try {
                 const response = await axios.get(urlAPIGetCartCount, {
                     headers: {
@@ -115,7 +111,6 @@ const CheckRoomAvailability = () => {
         catch (error) {
             console.error(error);
         }
-
     }
 
     const changeQuantity = (type, quantity) => {
@@ -130,10 +125,6 @@ const CheckRoomAvailability = () => {
     const handleSelectRoomType = (e) => {
         setRoomTypeInit(e.target.value);
     }
-
-    // const handleCheckinDate = (e) => {
-    //     setCheckin(e.target.value); 
-    // }
 
     const handleCheckinDate = (e) => {
         const currentDate = new Date();
@@ -173,52 +164,6 @@ const CheckRoomAvailability = () => {
             setCheckout(dateCheckout);
         }
     }
-
-    // const handleCheckRoomAvailability = () => {
-    //     let responseData
-    //     console.log(responseData)
-    //     if((checkin && checkout) && (new Date(checkin) < new Date(checkout))) {
-    //         if(roomTypeInit && checkin && checkout && adults && childrens) {
-    //             const urlAPICheckRoomAvailability = `${baseURL}/booking/api/booking/check-room-availability/`
-    //             const data = {
-    //                 hotel_slug: slug,
-    //                 room_type: roomTypeInit,
-    //                 checkin: checkin,
-    //                 checkout: checkout,
-    //                 adult: adults,
-    //                 children: childrens
-    //             };
-    //             console.log(data)
-    //             axios.post(urlAPICheckRoomAvailability, data)
-    //             .then(response => {
-    //                 responseData = response.data
-    //                 console.log('responseData : ', responseData)
-    //                 navigate(`/checkroomavailability/${encodeURIComponent(responseData.slug)}?room-type=${encodeURIComponent(responseData.room_type)}&date-checkin=${encodeURIComponent(checkin)}&date-checkout=${encodeURIComponent(checkout)}&adults=${encodeURIComponent(adults)}&childrens=${encodeURIComponent(childrens)}`);
-    //             })
-    //             .catch(error => {
-    //                 console.error('There was an error!', error);
-    //             })
-    //         }
-    //         else {
-    //             Swal.fire({
-    //                 icon: 'error',
-    //                 title: 'Nhập thiếu thông tin!',
-    //                 text: 'Vui lòng nhập đầy đủ các thông tin cần để kiểm tra phòng trống',
-    //                 showConfirmButton: false,
-    //                 timer: 2000
-    //             })
-    //         }
-    //     } else {
-    //         Swal.fire({
-    //             icon: 'error',
-    //             title: 'Ngày Checkout không hợp lệ!',
-    //             text: ' Bạn vui lòng nhập lại ngày Check out',
-    //             showConfirmButton: false,
-    //             timer: 3000
-    //         })
-    //     }
-
-    // }
 
     const handleCheckRoomAvailability = async () => {
         if ((checkin && checkout) && (new Date(checkin) < new Date(checkout))) {
@@ -282,7 +227,7 @@ const CheckRoomAvailability = () => {
 
     const handleAddToSelection = async (roomId, checkin, checkout, adults, childrens) => {
         let responseData;
-        const URL = `${baseURL}/api/add-cart-item`;
+        const URL = `${baseURL}/api/add-cart-item/`;
         const data = {
             "room": roomId,
             "check_in_date": checkin,
@@ -307,7 +252,6 @@ const CheckRoomAvailability = () => {
             if (error.response) {
                 if (error.response.status === 401) {
                     localStorage.setItem('redirectUrl', window.location.pathname + window.location.search);
-                    // Hiển thị thông báo lỗi 401
                     Swal.fire({
                         icon: 'error',
                         title: 'Lỗi!',
@@ -315,7 +259,7 @@ const CheckRoomAvailability = () => {
                         confirmButtonText: 'Đăng nhập',
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = '/login'; // Đường dẫn đến trang đăng nhập
+                            window.location.href = '/login'; 
                         }
                     });
                 } else if (error.response.data.error) {

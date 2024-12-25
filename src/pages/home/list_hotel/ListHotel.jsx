@@ -37,10 +37,6 @@ const ListHotel = ()=> {
     useEffect(() => {       
         fetchHotels(hotelNames);
     },[hotelNames]);
-        
-    const handleUpdateNameHotel = () => {
-        setHotelNames(searchTerm);
-    }
 
     return (
         <>

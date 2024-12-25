@@ -1,10 +1,8 @@
 import React, {useState, useEffect} from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Header from "../../baseComponent/Header";
 import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
-import { useAuth } from '../../auth/AuthContext';
 import API_BASE_URL from '../../../config/apiConfig';
 import { apiRequest } from "../../../utils/api";
 
@@ -98,40 +96,6 @@ const DetailHotel = () => {
     const handleSelectRoomType = (e) => {
         setInitRoomType(e.target.value);
     }
-    // const handleCheckRoomAvailability = () => {
-    //     let responseData
-    //     if(initRoomType && checkin && checkout && adults && childrens) {
-    //         const urlAPICheckRoomAvailability = `${baseURL}/booking/api/booking/check-room-availability/`
-    //         const data = {
-    //             hotel_slug: detailHotel.slug,
-    //             room_type: initRoomType,
-    //             checkin: checkin,
-    //             checkout: checkout,
-    //             adult: adults,
-    //             children: childrens
-    //         };
-    //         console.log('data : ', data)
-    //         axios.post(urlAPICheckRoomAvailability, data
-    //         )
-    //         .then(response => {
-    //             responseData = response.data
-    //             console.log('responseData : ', responseData)
-    //             navigate(`/checkroomavailability/${encodeURIComponent(responseData.slug)}?room-type=${encodeURIComponent(responseData.room_type)}&date-checkin=${encodeURIComponent(checkin)}&date-checkout=${encodeURIComponent(checkout)}&adults=${encodeURIComponent(adults)}&childrens=${encodeURIComponent(childrens)}`);
-    //         })
-    //         .catch(error => {
-    //             console.error('There was an error!', error);
-    //         })
-    //     }
-    //     else {
-    //         Swal.fire({
-    //             icon: 'error',
-    //             title: 'Nhập thiếu thông tin!',
-    //             text: 'Vui lòng nhập đầy đủ các thông tin cần để kiểm tra phòng trống',
-    //             showConfirmButton: false,
-    //             timer: 2000
-    //         })
-    //     }
-    // }
 
     const handleCheckRoomAvailability = async () => {
         if ((checkin && checkout) && (new Date(checkin) < new Date(checkout))) {
@@ -197,7 +161,7 @@ const DetailHotel = () => {
         const fetchHotelDetails = async () => {
             console.log('token :',token);
             try {
-                const responseHotelDetail = await axios.get(`${baseURL}/api/hotels/${slug}`);
+                const responseHotelDetail = await axios.get(`${baseURL}/api/hotels/${slug}/`);
                 console.log(responseHotelDetail.data);
                 setDetailHotel(responseHotelDetail.data);
                 console.log(responseHotelDetail.data.hotel_gallery);
@@ -205,7 +169,7 @@ const DetailHotel = () => {
                 setHid(responseHotelDetail.data.hid)
                 console.log(responseHotelDetail.data.hid);
 
-                const responseRoomType = await axios.get(`${baseURL}/api/hotels/${slug}/room-types`);
+                const responseRoomType = await axios.get(`${baseURL}/api/hotels/${slug}/room-types/`);
                 console.log(responseRoomType.data.roomtype);
                 setRoomTypes(responseRoomType.data.roomtype);
 
@@ -233,7 +197,7 @@ const DetailHotel = () => {
 
     const fetchHotelReview = async (hid) => {
         try {
-            const responseHotelReview = await axios.get(`${baseURL}/api/reviews/hotel-reviews/${hid}`);
+            const responseHotelReview = await axios.get(`${baseURL}/api/reviews/hotel-reviews/${hid}/`);
             setHotelId(responseHotelReview.data.hotel_id);
             setListHotelReviews(responseHotelReview.data.reviews);
             handleAverageRating(responseHotelReview.data.reviews);

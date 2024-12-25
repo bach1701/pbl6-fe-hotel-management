@@ -1,6 +1,4 @@
-import Swal from 'sweetalert2';
 import axios from 'axios';
-import { useAuth } from '../auth/AuthContext';
 import { useRoomCount } from '../home/RoomCountContext/RoomCountContext'
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -19,25 +17,6 @@ const Header = () => {
     const token = localStorage.getItem('accessToken');
 
     useEffect (() => {
-        // const fetchProfile = async () => {
-        //     const URL = `${API_BASE_URL}/user/api/userauths/profile/`;
-        //     try {
-        //         const response = await apiRequest(URL);
-        //         setProfileUser(response.data.profile);
-        //         setInforUser(response.data.user);
-        //         console.log(response.data);
-        //         console.log("2");
-        //     }
-        //     catch (err) {
-        //         console.error(err);
-        //         console.log("3");
-        //     }
-        // }
-        // if (token) {
-        //     console.log('access token:', token);
-        //     fetchCartItemCount();
-        // }
-        // fetchProfile();
         const fetchProfile = async () => {
             if (token) {
                 const URL = `${API_BASE_URL}/user/api/userauths/profile/`;
@@ -56,7 +35,7 @@ const Header = () => {
     },[location]);
 
     const fetchCartItemCount = async () => {
-        const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count`; 
+        const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count/`; 
         try {
             const response = await axios.get(urlAPIGetCartCount, {
                 headers: {

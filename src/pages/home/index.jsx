@@ -71,7 +71,6 @@ const Index = ()=>{
             try {
                 const response = await axios.get(`${baseURL}/api/hotels/`);
                 console.log(response.data);
-                // setHotels(response.data);
                 const hotelsWithRatings = response.data.map(hotel => ({
                     ...hotel,
                     averageRating: calculateAverageRating(hotel.reviews)
@@ -86,7 +85,7 @@ const Index = ()=>{
         };
 
         const fetchCartItemCount = async () => {
-            const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count`; 
+            const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count/`; 
             try {
                 const response = await axios.get(urlAPIGetCartCount, {
                     headers: {

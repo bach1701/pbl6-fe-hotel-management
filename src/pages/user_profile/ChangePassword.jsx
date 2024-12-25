@@ -91,52 +91,6 @@ const ChangePassword = () => {
                 console.log("Huỷ đổi mật khẩu.");
             }
         })
-
-        // if(newPassword !== confirmPassword) {
-        //     Swal.fire({
-        //         icon: 'error',
-        //         title: 'Lỗi!',
-        //         text: 'Mật khẩu không trùng khớp.',
-        //         showConfirmButton: false,
-        //         timer: 1500
-        //     });
-        //     return;
-        // }
-        // else {
-        //     try {
-        //         const response = await apiRequest(URL, 'PATCH', data);
-        //         console.log(response.data);
-        //         Swal.fire({
-        //             icon: 'success',
-        //             title: 'Thành công!',
-        //             text: 'Đổi mật khẩu thành công.',
-        //             showConfirmButton: false,
-        //             timer: 1500
-        //         });
-        //     }
-        //     catch (error) {
-        //         if (error.response && error.response.data) {
-        //             const errorMessage = error.response.data.error;
-        //             if (errorMessage === 'Incorrect old password.') {
-        //                 Swal.fire({
-        //                     icon: 'error',
-        //                     title: 'Lỗi!',
-        //                     text: 'Mật khẩu cũ không đúng.',
-        //                     showConfirmButton: false,
-        //                     timer: 1500
-        //                 });
-        //             } else {
-        //                 Swal.fire({
-        //                     icon: 'error',
-        //                     title: 'Lỗi!',
-        //                     text: errorMessage,
-        //                     showConfirmButton: false,
-        //                     timer: 1500
-        //                 });
-        //             }  
-        //         }
-        //     }
-        // }
     };
 
     return (

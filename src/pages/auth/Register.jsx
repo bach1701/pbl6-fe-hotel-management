@@ -82,10 +82,10 @@ const Register = () => {
                                 <div id="logo"> <a href="index_1.html"><img src="images/logo.png" alt=""/></a> </div>
                                 <div className="mmenu-trigger">
                                     <button className="hamburger utfbutton_collapse" type="button">
-                        <span className="utf_inner_button_box">
-                            <span className="utf_inner_section"></span>
-                        </span>
-                    </button>
+                                        <span className="utf_inner_button_box">
+                                            <span className="utf_inner_section"></span>
+                                        </span>
+                                    </button>
                                 </div>
                                 <nav id="navigation" className="style_one">
                                     <ul id="responsive">
