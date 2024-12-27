@@ -184,13 +184,14 @@ const CheckRoomAvailability = () => {
                     console.log('responseData : ', responseData);
                     navigate(`/checkroomavailability/${encodeURIComponent(responseData.slug)}?room-type=${encodeURIComponent(responseData.room_type)}&date-checkin=${encodeURIComponent(checkin)}&date-checkout=${encodeURIComponent(checkout)}&adults=${encodeURIComponent(adults)}&childrens=${encodeURIComponent(childrens)}`);
                 } catch (error) {
-                    // Xử lý lỗi khi không có phòng
                     if (error.response && error.response.data) {
-                        const errorMessage = error.response.data.message || 'Có lỗi xảy ra.';
+                        const errorMessage = error.response 
+                        ? error.response.data.error || error.message 
+                        : error.message;
                         Swal.fire({
                             icon: 'error',
                             title: 'Lỗi!',
-                            text: `Sức chứa của ${roomTypeInit} không phù hợp.`,
+                            text: errorMessage,
                             showConfirmButton: false,
                             timer: 3000
                         });
@@ -328,7 +329,7 @@ const CheckRoomAvailability = () => {
                                             }}
                                             >
                                                 <h3>Room No. {RoomAvailability.room_number} </h3>
-                                                <span class="value">{RoomAvailability.price} VNĐ<span>/Per Night</span></span> 
+                                                <span class="value">${RoomAvailability.price}<span>/Per Night</span></span> 
                                             </div>
                                             <div class="utf_price_plan_features">
                                                 <ul>

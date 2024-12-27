@@ -28,6 +28,7 @@ const DetailHotel = () => {
     const [listHotelReviews, setListHotelReviews] = useState([]);
     const [averageRating, setAverageRating] = useState(0);
     const [inforReceptionist, setInforReceptionist] = useState({});
+    const [publicCoupon, setPublicCoupon] = useState([]);
 
     const baseURL = API_BASE_URL;
 
@@ -118,11 +119,13 @@ const DetailHotel = () => {
                 } catch (error) {
                     // Xử lý lỗi khi không có phòng
                     if (error.response && error.response.data) {
-                        const errorMessage = error.response.data.message || 'Có lỗi xảy ra.';
+                        const errorMessage = error.response 
+                        ? error.response.data.error || error.message 
+                        : error.message;
                         Swal.fire({
                             icon: 'error',
                             title: 'Lỗi!',
-                            text: `Sức chứa của ${initRoomType} không phù hợp.`,
+                            text: errorMessage,
                             showConfirmButton: false,
                             timer: 3000
                         });
@@ -181,15 +184,26 @@ const DetailHotel = () => {
             setLoading(false);
             }
         };
+      fetchPublicCoupon();
       fetchHotelDetails();
     }, [slug]);
 
     const fetchReceptionist = async (hid) => {
         const URL = `${baseURL}/user/api/userauths/receptionist/hotel/${hid}/`;
         try {
-            const responseReceptionist = await apiRequest(URL);
+            const responseReceptionist = await axios.get(URL);
             console.log(responseReceptionist.data);
             setInforReceptionist(responseReceptionist.data);
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+    const fetchPublicCoupon = async () => {
+        const URL = `${baseURL}/api/public-coupons/`;
+        try {
+            const responsePublicCoupon = await axios.get(URL);
+            console.log(responsePublicCoupon.data);
+            setPublicCoupon(responsePublicCoupon.data);
         } catch (error) {
             console.log(error.message);
         }
@@ -362,7 +376,7 @@ const DetailHotel = () => {
                                                 >
                                                     <h5>{roomType.type}<sub class="ppl-offer label-light-success">20% Off</sub></h5>
                                                     <p><strong>Max :</strong> {roomType.room_capacity} Persons</p>
-                                                    <span>{roomType.price} VNĐ</span>
+                                                    <span>${roomType.price}</span>
                                                 </li>
                                             ))}
                                         </ul>
@@ -386,7 +400,7 @@ const DetailHotel = () => {
                                         />
                                         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: '20px' }}>
                                             <div style={{ flex: '0 0 48%', marginBottom: '10px' }}>
-                                                <p><strong>Price:</strong> {selectedRoom.price} VNĐ</p>
+                                                <p><strong>Price:</strong>${selectedRoom.price}</p>
                                             </div>
                                             <div style={{ flex: '0 0 48%', marginBottom: '10px' }}>
                                                 <p><strong>Description:</strong> {selectedRoom.description}</p>
@@ -499,7 +513,7 @@ const DetailHotel = () => {
                             </div>
                             <div id="utf_add_review" class="utf_add_review-box">
                                 <h3 class="utf_listing_headline_part margin-bottom-20">Add Your Review</h3>
-                                <span class="utf_leave_rating_title">Your email address will not be published.</span>
+                                <span class="utf_leave_rating_title">Your email address will be published.</span>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="clearfix"></div>
@@ -557,10 +571,10 @@ const DetailHotel = () => {
                                     </div>
                                     <div class="with-forms">
                                         <div class="col-lg-12 col-md-12 ">
-                                            <label for="">Select Room Type </label>
+                                            <label for="">Room Type </label>
                                             <select name="room-type" class="utf_chosen_select_single" required
                                                     onChange={handleSelectRoomType}>
-                                                <option value="">Chọn loại phòng</option>
+                                                <option value="">Select Room Type</option>
                                                 {roomTypes.map(roomType => (
                                                     <option value={roomType.type}>{roomType.type}</option>
                                                 ))}
@@ -632,13 +646,15 @@ const DetailHotel = () => {
                                 <div class="utf_coupon_widget" style={{ backgroundImage: 'url(images/coupon-bg-1.jpg)' }}>
                                     <div class="utf_coupon_overlay"></div>
                                     <a href="#" class="utf_coupon_top">
-                                        <h3>Book Now & Get 50% Discount</h3>
-                                        <div class="utf_coupon_expires_date">Date of Expires 05/08/2022</div>
-                                        <div class="utf_coupon_used"><strong>How to use?</strong> Just show us this coupon on a screen</div>
+                                        <h3>Book Now & Get {publicCoupon[0]?.discount}% Discount</h3>
+                                        <div class="utf_coupon_expires_date">Date of Expires {publicCoupon[0]?.valid_to}</div>
+                                        <div class="utf_coupon_used"><strong>How to use?</strong> Just apply this coupon on a Check-out page.</div>
                                     </a>
                                     <div class="utf_coupon_bottom">
                                         <p>Coupon Code</p>
-                                        <div class="utf_coupon_code">DL76T</div>
+                                        <div className="utf_coupon_code">
+                                            {publicCoupon[0]?.code ? publicCoupon[0].code : "No public coupons available."}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

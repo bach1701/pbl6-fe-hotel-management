@@ -7,40 +7,36 @@ const Footer = () => {
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 col-sm-12 col-xs-12">
-                        <h4>Giới thiệu về Chúng Tôi</h4>
+                        <h4>About Us</h4>
+                        <p>Welcome to Travel-PBL6, where we connect travelers with great stay experiences at hundreds of hotels nationwide. With a mission to provide convenience and ease in booking, we are proud to provide a simple and user-friendly online platform.</p>
+                        <h4>History of Formation</h4>
+                        <p>Travel-PBL6 was founded in 2024 with the desire to revolutionize the hotel booking experience. Our founding team is made up of experts in the travel industry, always working to improve and optimize the booking process for every customer. </p>
+                        <h4>Contact Us</h4>
                         <p>
-                        Chào mừng bạn đến với Travel-PBL6, nơi chúng tôi kết nối du khách với những trải nghiệm lưu trú tuyệt vời tại hàng trăm khách sạn trên toàn quốc. Với sứ mệnh mang đến sự thuận tiện và dễ dàng trong việc đặt phòng, chúng tôi tự hào cung cấp một nền tảng trực tuyến đơn giản và thân thiện với người dùng.
-                        </p>
-                        <h4>Lịch Sử Hình Thành</h4>
-                        <p>
-                        Travel-PBL6 được thành lập vào năm 2024 với mong muốn cách mạng hóa trải nghiệm đặt phòng khách sạn. Đội ngũ sáng lập của chúng tôi gồm những chuyên gia trong ngành du lịch, luôn nỗ lực để cải thiện và tối ưu hóa quy trình đặt phòng cho mọi khách hàng.
-                        </p>
-                        <h4>Liên Hệ với Chúng Tôi</h4>
-                        <p>
-                        Nếu bạn có bất kỳ câu hỏi nào hoặc cần hỗ trợ, hãy liên hệ với chúng tôi qua travel-pbl6.dut.udn@gmail.com!
+                        If you have any questions or need assistance, contact us at travel-pbl6.dut.udn@gmail.com!
                         </p>
                     </div>
                     <div class="col-md-2 col-sm-3 col-xs-6">
                         <h4>My Account</h4>
                         <ul class="social_footer_link">
-                            <li><Link to='/user-profile/my-profile'>Hồ sơ của tôi</Link></li>
-                            <li><Link to='/selected-room'>Danh phòng chờ của tôi</Link></li>
+                            <li><Link to='/user-profile/my-profile'>My Profile</Link></li>
+                            <li><Link to='/selected-room'>List Cart Item</Link></li>
                         </ul>
                     </div>
                     <div class="col-md-2 col-sm-3 col-xs-6">
                         <h4>Pages</h4>
                         <ul class="social_footer_link">
                             <li><a href="#">Blog & Tip</a></li>
-                            <li><a href="#">Gợi ý địa điểm du lịch</a></li>
-                            <li><a href="#">Khách sạn nổi bật</a></li>
+                            <li><a href="#">Reference Location</a></li>
+                            <li><a href="#">Our Popular Hotels</a></li>
                         </ul>
                     </div>
                     <div class="col-md-2 col-sm-3 col-xs-6">
                         <h4>Help</h4>
                         <ul class="social_footer_link">
-                        <li><Link to='/login'>Đăng nhập</Link></li>
-                        <li><Link to='/register'>Đăng ký</Link></li>
-                        <li><Link to='/'>Liên hệ</Link></li>
+                        <li><Link to='/login'>Login</Link></li>
+                        <li><Link to='/register'>Register</Link></li>
+                        <li><Link to='/'>Contact</Link></li>
                         </ul>
                     </div>
                 </div>

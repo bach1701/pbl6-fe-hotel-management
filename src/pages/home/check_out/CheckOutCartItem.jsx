@@ -87,7 +87,17 @@ const CheckOutCartItem = () => {
                 )
             }
             catch (error) {
-                console.error('Error response:', error.response); 
+                console.error('Error response:', error.response);
+                const errorMessage = error.response 
+                ? error.response.data.error || error.message 
+                : error.message; 
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: errorMessage,
+                    showConfirmButton: false,
+                    timer: 2000
+                })
             }
         }
     }
@@ -334,7 +344,7 @@ const CheckOutCartItem = () => {
                                                                 <ul>
                                                                     <li style={{ backgroundColor: '#FDFDFD' }}>
                                                                         <h5>Total:</h5>
-                                                                        <span className="">{totalPrice} VNĐ</span>
+                                                                        <span className="">${totalPrice}</span>
                                                                     </li>
                                                                 </ul>
                                                             </div>
@@ -377,7 +387,7 @@ const CheckOutCartItem = () => {
                                                                     >
                                                                         <strong>View detail Type Room</strong>
                                                                     </p>
-                                                                    <span> {cartItemCheckout.price} VNĐ </span>
+                                                                    <span> ${cartItemCheckout.price} </span>
                                                                 </li>
                                                     </ul>
                                                 </div>
@@ -424,7 +434,7 @@ const CheckOutCartItem = () => {
                                         />
                                         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: '20px' }}>
                                             <div style={{ flex: '0 0 48%', marginBottom: '10px' }}>
-                                                <p><strong>Price:</strong> {selectedRoom.price} VNĐ</p>
+                                                <p><strong>Price:</strong> ${selectedRoom.price}</p>
                                             </div>
                                             <div style={{ flex: '0 0 48%', marginBottom: '10px' }}>
                                                 <p><strong>Description:</strong> {selectedRoom.description}</p>
@@ -448,12 +458,9 @@ const CheckOutCartItem = () => {
                                     onClick={() => handleSaveInforBill()}
                                     disabled={isButtonDisabled}
                                 >
-                                    Xác nhận thông tin đặt phòng<i className="fas fa-right-arrow"></i>
+                                    Confirm Booking Information<i className="fas fa-right-arrow"></i>
                                 </button>
                             </div>
-                            {/* <div class="col-lg-12">
-                                    <button type="submit" class="button utf_booking_confirmation_button margin-top-20 margin-bottom-10"><i class="fas fa-right-arrow"></i></button> 		
-                            </div> */}
                         </div>
                         <div class="col-lg-4 col-md-4 margin-top-0 utf_listing_payment_section">
                             <div class="utf_booking_listing_item_container compact utf_order_summary_widget_section">
@@ -476,12 +483,12 @@ const CheckOutCartItem = () => {
                                         <div>
                                             <ul>
                                                 <li>Check-in<span>{cartItemCheckout.check_in_date}</span></li>
-                                                <li>Check-out<span>{cartItemCheckout.check_in_date}</span></li>
+                                                <li>Check-out<span>{cartItemCheckout.check_out_date}</span></li>
                                                 <li>Total Days<span> {dayDifference} days</span></li>
                                                 <li>Adults<span>{cartItemCheckout.adults_count}</span></li>
                                                 <li>Childrens<span>{cartItemCheckout.childrens_count}</span></li>
-                                                <li>Original Price<span>{totalPrice} VNĐ</span></li>
-                                                <li>Discount<span>-{priceDiscount} VNĐ</span></li>
+                                                <li>Original Price<span>${totalPrice}</span></li>
+                                                <li>Discount<span>-${priceDiscount}</span></li>
                                             </ul>
                                         </div>
                                     )
@@ -509,7 +516,7 @@ const CheckOutCartItem = () => {
                                         </div>
                                     </li>
                                     <div class="clearfix"></div>
-                                    <li class="total-costs">Total Cost <span>{finalPrice} VNĐ</span></li>                            
+                                    <li class="total-costs">Total Cost <span>${finalPrice}</span></li>                            
                                 </ul>
                                 <form method="POST" action="https://checkout.flutterwave.com/v3/hosted/pay">
                                     <input type="hidden" name="public_key" value="FLWPUBK_TEST-a2c377d3cf56b37b9e660f85e26d2f8f-X" />

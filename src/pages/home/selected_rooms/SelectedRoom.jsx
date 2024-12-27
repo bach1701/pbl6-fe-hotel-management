@@ -215,7 +215,7 @@ const SelectedRoom = () => {
                                                                     const dayDifference = timeDifference / (1000 * 3600 * 24); // Chuyển đổi từ milliseconds sang ngày
                                                                     const totalPrice = room.price * dayDifference; 
 
-                                                                    return <span>{dayDifference} x {room.price} VNĐ</span>;
+                                                                    return <span>{dayDifference} x ${room.price}</span>;
                                                                 })()}
                                                             </li>
                                                         </>

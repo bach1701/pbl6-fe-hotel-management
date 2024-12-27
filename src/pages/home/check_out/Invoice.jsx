@@ -40,7 +40,39 @@ const Invoice = () => {
                         <div class="card-body p-5">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <a href="javascript:window.print()" class="btn btn-success me-1"><i class="fa fa-print"></i> Print</a>
+                                    {/* <a href="javascript:window.print()" class="btn btn-success me-1"><i class="fa fa-print"></i> Print</a> */}
+                                    <a href="#!" class="btn btn-dark btn-lg card-footer-btn justify-content-center text-uppercase-bold-sm hover-lift-light">
+                                        <span class="svg-icon text-white me-2">
+                                            <title>ionicons-v5-g</title>
+                                            <path 
+                                                d="M336,208V113a80,80,0,0,0-160,0v95" 
+                                                style={{
+                                                    fill: 'none',
+                                                    stroke: '#000',
+                                                    strokeLinecap: 'round',
+                                                    strokeLinejoin: 'round',
+                                                    strokeWidth: '32px'
+                                                }}
+                                            />
+                                            <rect 
+                                                x="96" 
+                                                y="208" 
+                                                width="320" 
+                                                height="272" 
+                                                rx="48" 
+                                                ry="48" 
+                                                style={{
+                                                    fill: 'none',
+                                                    stroke: '#000',
+                                                    strokeLinecap: 'round',
+                                                    strokeLinejoin: 'round',
+                                                    strokeWidth: '32px'
+                                                }}
+                                            />
+                                        
+                                        </span>
+                                        #Paid
+                                    </a>
                                     <h2 style={{ paddingTop: '40px' }}>
                                         Hey {dataInforBooking.orderer_information?.username_order || "User"},
                                     </h2>
@@ -169,7 +201,7 @@ const Invoice = () => {
                                 </div>
                             </div>
                         </div>
-                        <a href="#!" class="btn btn-dark btn-lg card-footer-btn justify-content-center text-uppercase-bold-sm hover-lift-light">
+                        {/* <a href="#!" class="btn btn-dark btn-lg card-footer-btn justify-content-center text-uppercase-bold-sm hover-lift-light">
                             <span class="svg-icon text-white me-2">
                             
                                 <title>ionicons-v5-g</title>
@@ -201,7 +233,9 @@ const Invoice = () => {
                             
                             </span>
                             Paid
-                        </a>
+                        </a> */}
+                        <a href="javascript:window.print()" class="btn btn-success me-1"><i class="fa fa-print"></i> Print</a>
+
                         </div>
                     </div>
                 </div>

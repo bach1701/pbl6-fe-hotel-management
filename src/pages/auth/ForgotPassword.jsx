@@ -85,7 +85,7 @@ const ForgotPassword = () => {
                     <div className="container">
                         <div className="row">
                             <div className="col-md-12">
-                                <h3 className="headline_part centered margin-top-75 margin-bottom-45">Forgot Password <span>Nhập Email của bạn để xác thực qua Email.</span> </h3>
+                                <h3 className="headline_part centered margin-top-75 margin-bottom-45">Forgot Password <span>Enter your Email to authenticate via Email.</span> </h3>
                             </div>
                         </div>
                     </div>
@@ -103,7 +103,7 @@ const ForgotPassword = () => {
                                                 <form method="post" className="forgotpassword" onSubmit={handleForgotPassword}>
                                                     <p className="utf_row_form utf_form_wide_block">
                                                         <label htmlFor="username">
-                                                            <input type="text" className="input-text" name="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email..." />
+                                                            <input type="text" className="input-text" name="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Type your Email..." />
                                                         </label>
                                                     </p>
                                                     <div className="utf_row_form">

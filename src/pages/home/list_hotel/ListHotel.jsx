@@ -19,6 +19,11 @@ const ListHotel = ()=> {
     console.log(initialHotelName);
     console.log(token);
 
+    const calculateAverageRating = (reviews) => {
+        if (reviews.length === 0) return 0;
+        const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+        return (totalRating / reviews.length).toFixed(1); 
+    };
 
     const fetchHotels = async(hotelNames) => {
         const baseURL = `${API_BASE_URL}/api/hotels/`;
@@ -29,6 +34,11 @@ const ListHotel = ()=> {
         try {
             const response = await axios.get(url);
             setHotels(response.data);
+            const hotelsWithRatings = response.data.map(hotel => ({
+                ...hotel,
+                averageRating: calculateAverageRating(hotel.reviews)
+            }));
+            setHotels(hotelsWithRatings);
         } catch (err) {
             setError(err);
         }
@@ -129,8 +139,8 @@ const ListHotel = ()=> {
                                                             <span class="like-icon"></span>
                                                             <span class="tag"><i class="im im-icon-Hotel"></i> Hotels</span>
                                                             <div class="utf_listing_prige_block utf_half_list">
-                                                                <span class="utf_meta_listing_price"><i class="fa fa-tag"></i> $25 - $45</span>
-                                                                <span class="utp_approve_item"><i class="utf_approve_listing"></i></span>
+                                                                <span class="utf_meta_listing_price"><i class="fa fa-tag"></i>${hotel.price_min} - ${hotel.price_max}</span>
+                                                                {/* <span class="utp_approve_item"><i class="utf_approve_listing"></i></span> */}
                                                             </div>
                                                         </div>
                                                         <span class="utf_open_now">Open Now</span>
@@ -140,7 +150,7 @@ const ListHotel = ()=> {
                                                                 <span><i class="fa fa-map-marker"></i>{hotel.address}</span>
                                                                 <span><i class="fa fa-phone"></i>{hotel.mobile}</span>
                                                                 <div class="utf_star_rating_section" data-rating="4.5">
-                                                                    <div class="utf_counter_star_rating">(4.5)</div>
+                                                                    <div class="utf_counter_star_rating">({hotel.averageRating})</div>
                                                                 </div>
                                                                 <p>{hotel.description}</p>
                                                             </div>

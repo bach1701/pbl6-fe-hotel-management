@@ -19,6 +19,8 @@ const Index = ()=>{
     const { setRoomCount } = useRoomCount();
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+    const [rangePricies, setRangePricies] = useState([]);
+    const [combinedHotels, setCombinedHotels] = useState([]);
 
     const token = localStorage.getItem('accessToken');
     const baseURL = API_BASE_URL;
@@ -83,7 +85,6 @@ const Index = ()=>{
                 setLoading(false);
             }
         };
-
         const fetchCartItemCount = async () => {
             const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count/`; 
             try {
@@ -108,7 +109,7 @@ const Index = ()=>{
     
       if (loading) return <p>Loading hotels...</p>;
       if (error) return <p>Error: {error}</p>;
-      
+
     return (
         <div id="main_wrapper">
             {/* <Header /> */}
@@ -121,7 +122,7 @@ const Index = ()=>{
                         <div class="row">
                             <div class="col-md-12">
                                 <h2>Book Unique Experiences</h2>
-                                <h4>Discover top rated hotels, shops and restaurants around the world</h4>
+                                <h4>Discover top rated hotels around the world</h4>
                                 <div class="main_input_search_part">
                                     <div class="main_input_search_part_item">
                                         <input type="text" placeholder="Type name of hotel..." 
@@ -129,18 +130,18 @@ const Index = ()=>{
                                         />
                                     </div>
                                     <div class="main_input_search_part_item main-search-input-item search-input-icon">
-                                        <input type="text" placeholder="Select Booking Date" id="booking-date-search"/>
-                                        <i class="fa fa-calendar"></i>
+                                        <input type="text" placeholder="Type name of city..." id="booking-date-search"/>
+                                        {/* <i class="fa fa-calendar"></i> */}
                                     </div>
-                                    <div class="main_input_search_part_item intro-search-field">
+                                    {/* <div class="main_input_search_part_item intro-search-field">
                                         <select data-placeholder="All Categories" class="selectpicker default" title="All Categories" data-live-search="true" data-selected-text-format="count" data-size="5">
-                                <option>Food & Restaurants </option>
-                                <option>Shop & Education</option>
-                                <option>Education</option>
-                                <option>Business</option>
-                                <option>Events</option>
-                                </select>
-                                    </div>
+                                            <option>Food & Restaurants </option>
+                                            <option>Shop & Education</option>
+                                            <option>Education</option>
+                                            <option>Business</option>
+                                            <option>Events</option>
+                                        </select>
+                                    </div> */}
                                     <button class="button" onclick="window.location.href='listings_half_screen_map_list.html'" onClick={handleSearch}>Search</button>
                                 </div>
                             </div>
@@ -153,7 +154,7 @@ const Index = ()=>{
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
-                            <h3 class="headline_part centered margin-top-75 margin-bottom-45">Gợi ý địa điểm du lịch <span></span> </h3>
+                            <h3 class="headline_part centered margin-top-75 margin-bottom-45">Reference Location<span></span> </h3>
                         </div>
                     </div>
                 </div>
@@ -252,7 +253,7 @@ const Index = ()=>{
                 <div class="container">
                     <div class="row slick_carousel_slider">
                         <div class="col-md-12">
-                            <h3 class="headline_part centered margin-bottom-45">Khách sạn nổi bật <span>Khám phá những địa điểm tuyệt vời cùng Travel-PBL6!</span> </h3>
+                            <h3 class="headline_part centered margin-bottom-45">Our Popular Hotels<span>Explore great hotel with Travel-PBL6!</span> </h3>
                         </div>
                         <div class="row">     
                             <div class="col-md-12">
@@ -266,7 +267,7 @@ const Index = ()=>{
                                                             <span class="utf_open_now">Open Now</span>
                                                             <div class="utf_listing_item_content">
                                                                 <div class="utf_listing_prige_block">
-                                                                    <span class="utf_meta_listing_price"><i class="fa fa-tag"></i> $25 - $55</span>
+                                                                    <span class="utf_meta_listing_price"><i class="fa fa-tag"></i> ${hotel.price_min} - ${hotel.price_max}</span>
                                                                     <span class="utp_approve_item"><i class="utf_approve_listing"></i></span>
                                                                 </div>
                                                                 <h3>{hotel.name}</h3>
@@ -276,7 +277,6 @@ const Index = ()=>{
                                                         </div>
                                                         <div class="utf_star_rating_section" data-rating="4.5">
                                                             <div class="utf_counter_star_rating">({hotel.averageRating})</div>
-                                                            {/* <span class="utf_view_count"><i class="fa fa-eye"></i>{hotel.views}</span> */}
                                                             <span class="like-icon"></span>
                                                         </div>
                                                     </Link>
@@ -365,7 +365,7 @@ const Index = ()=>{
                             <div class="utf_subscribe_block clearfix">
                                 <div class="col-md-6 col-sm-7">
                                     <div class="section-heading">
-                                        <h2 class="utf_sec_title_item utf_sec_title_item2">THÔNG TIN LIÊN HỆ</h2>
+                                        <h2 class="utf_sec_title_item utf_sec_title_item2">CONTACT INFORMATION</h2>
                                         <p class="utf_sec_meta"><i className='fa fa-location-pin' style={{paddingRight: "10px"}}></i>
                                         54 Nguyễn Lương Bằng, Đà Nẵng
                                         </p>
@@ -381,8 +381,8 @@ const Index = ()=>{
                                     <div class="contact-form-action">
                                         <form method="post" onSubmit={(e) => { e.preventDefault(); handleSendContactEmail(); }}>
                                             <span class="la la-envelope-o"></span>
-                                            <input class="form-control" type="email" placeholder="Nhập email của bạn" required="" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                                            <button class="utf_theme_btn" type="submit" onClick={handleSendContactEmail}>Gửi</button>
+                                            <input class="form-control" type="email" placeholder="Type your email..." required="" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                                            <button class="utf_theme_btn" type="submit" onClick={handleSendContactEmail}>Send</button>
                                             <textarea name="comments" cols="40" rows="2" id="comments" placeholder="Your Message" required="" value={message} onChange={(e) => setMessage(e.target.value)}></textarea>
                                         </form>
                                     </div>

@@ -87,7 +87,7 @@ const Login = () => {
                                 <div className="clearfix"></div>
                             </div>
                             <div className="utf_right_side">
-                                <div className="header_widget"> <a href="#dialog_signin_part" className="button border sign-in popup-with-zoom-anim" onClick={handleRegisterClick}><i className="fa fa-plus"></i> Register</a> <a href="dashboard_add_listing.html" className="button border with-icon"><i className="sl sl-icon-user"></i> Add Listing</a></div>
+                                <div className="header_widget"> <a href="#dialog_signin_part" className="button border sign-in popup-with-zoom-anim" onClick={handleRegisterClick}><i className="fa fa-plus"></i> Register</a> </div>
                             </div>
                         </div>
                     </div>
@@ -98,7 +98,7 @@ const Login = () => {
                     <div className="container">
                         <div className="row">
                             <div className="col-md-12">
-                                <h3 className="headline_part centered margin-top-75 margin-bottom-45">Login <span>Hi there! Welcome Back.</span> </h3>
+                                <h3 className="headline_part centered margin-top-75 margin-bottom-45">Login <span>Hi there! Welcome Travel-PBL6.</span> </h3>
                             </div>
                         </div>
                     </div>
@@ -173,7 +173,7 @@ const Login = () => {
                 </div>
                 <div className="clearfix"></div>
 
-                <section className="fullwidth_block margin-top-65 padding-top-75 padding-bottom-70" data-background-color="#f9f9f9">
+                {/* <section className="fullwidth_block margin-top-65 padding-top-75 padding-bottom-70" data-background-color="#f9f9f9">
                     <div className="container">
                         <div className="row slick_carousel_slider">
                             <div className="col-md-12">
@@ -579,7 +579,7 @@ const Login = () => {
                         </div>
                     </div>
                 </div>
-                <div id="bottom_backto_top"><a href="#"></a></div>
+                <div id="bottom_backto_top"><a href="#"></a></div> */}
             </div>
         </>
     ) 

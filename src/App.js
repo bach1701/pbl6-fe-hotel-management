@@ -47,26 +47,6 @@ export default function App() {
                     <Route path="checkroomavailability/:slug" element={<LayoutNonFooter><CheckRoomAvailability /></LayoutNonFooter>} />
                     <Route path="contact" element={<div>Contact</div>} />
                     <Route path="*" element={<div>404 Not Found</div>} /> 
-
-            {/* <Route element={<Header />} path="/*" /> */}
-            {/* <Route index element={<MainLayout><Home /></MainLayout>} />
-            <Route path="login" element={<Login />} />
-            <Route path="forgot-password/" element={<ForgotPassword />} />
-            <Route path="reset-password/:id/:token" element={<ResetPassword />} />
-            <Route path="selected_room" element={<SelectedRoom />} />
-            <Route path="user-profile/my-profile" element={<ProfilePage />} />
-            <Route path="user-profile/history-booking" element={<HistoryBooking/>} />
-            <Route path="user-profile/history-review" element={<HistoryReview/>} />
-            <Route path="user-profile/change-password" element={<ChangePassword />} />
-            <Route path="success-payment" element={<SuccessPayment />} />
-            <Route path="invoice" element={<Invoice />} />
-            <Route path="checkout-cart-item" element={<CheckoutCartItem />} />
-            <Route path="register" element={<Register />} />
-            <Route path="listhotel" element={<ListHotel />} />
-            <Route path="detailhotel/:slug" element={<DetailHotel />} />
-            <Route path="checkroomavailability/:slug" element={<CheckRoomAvailability />} />
-            <Route path="contact" element={<div>Contact</div>} />
-            <Route path="*" element={<div>1</div>} /> */}
         </Routes>
       </BrowserRouter>
     </RoomCountProvider>
