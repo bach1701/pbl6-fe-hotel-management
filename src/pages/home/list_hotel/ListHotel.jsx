@@ -73,17 +73,17 @@ const ListHotel = ()=> {
                         <div class="col-lg-8 col-md-8">
                             <div class="listing_filter_block">
                                 <div class="col-md-2 col-xs-2">
-                                    <div class="utf_layout_nav"> <a href="listings_grid_with_sidebar.html" class="grid"><i class="fa fa-th"></i></a> <a href="#" class="list active"><i class="fa fa-align-justify"></i></a> </div>
+                                    <div class="utf_layout_nav"> <a href="#" class="list active"><i class="fa fa-align-justify"></i></a> </div>
                                 </div>
                                 <div class="col-md-10 col-xs-10">
-                                    <div class="sort-by utf_panel_dropdown sort_by_margin float-right"> <a href="#">Destination</a>
+                                    {/* <div class="sort-by utf_panel_dropdown sort_by_margin float-right"> <a href="#">Destination</a>
                                         <div class="utf_panel_dropdown-content">
                                             <input class="distance-radius" type="range" min="1" max="999" step="1" value="1" data-title="Select Range"/>
                                             <div class="panel-buttons">
                                                 <button class="panel-apply">Apply</button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
                                     <div class="sort-by">
                                         <div class="utf_sort_by_select_item sort_by_margin">
                                             <select data-placeholder="Sort by Listing" class="utf_chosen_select_single">
@@ -100,7 +100,7 @@ const ListHotel = ()=> {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="sort-by">
+                                    {/* <div class="sort-by">
                                         <div class="utf_sort_by_select_item sort_by_margin">
                                             <select data-placeholder="Categories:" class="utf_chosen_select_single">
                                                 <option>Categories</option>	
@@ -116,7 +116,7 @@ const ListHotel = ()=> {
                                                 <option>Events</option>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> */}
                                     <div class="sort-by">
                                         <div class="utf_sort_by_select_item utf_search_map_section">
                                             <ul>
@@ -137,7 +137,7 @@ const ListHotel = ()=> {
                                                             <img src={hotel.map_image} alt=""/>
                                                             <p>{hotel.map_image}</p>
                                                             <span class="like-icon"></span>
-                                                            <span class="tag"><i class="im im-icon-Hotel"></i> Hotels</span>
+                                                            {/* <span class="tag"><i class="im im-icon-Hotel"></i> Hotels</span> */}
                                                             <div class="utf_listing_prige_block utf_half_list">
                                                                 <span class="utf_meta_listing_price"><i class="fa fa-tag"></i>${hotel.price_min} - ${hotel.price_max}</span>
                                                                 {/* <span class="utp_approve_item"><i class="utf_approve_listing"></i></span> */}

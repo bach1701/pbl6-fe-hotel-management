@@ -311,7 +311,7 @@ const DetailHotel = () => {
                 <div id="utf_listing_gallery_part" class="utf_listing_section">
                     <div class="utf_listing_slider utf_gallery_container margin-bottom-0">
                         {hotelgalleries.map(hotelgallery => (
-                                <img src={`${hotelgallery.image}`} alt="" class="item utf_gallery"/>
+                            <img src={`${hotelgallery.image}`} alt="" class="item utf_gallery"/>
                         ))}
                     </div>
                 </div>
