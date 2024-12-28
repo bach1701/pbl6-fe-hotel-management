@@ -36,7 +36,7 @@ const CheckOutCartItem = () => {
     const baseURL = API_BASE_URL;
 
     const fetchCartItem = async() => {
-        const URL = `${baseURL}/api/cart/view_cart_item/${cartItemId}/`;
+        const URL = `${baseURL}/api/cart/view_cart_item/${cartItemId}`;
         try {
             const response = await apiRequest(URL);
             console.log(response.data);
