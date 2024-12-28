@@ -5,6 +5,8 @@ import Header from "../../baseComponent/Header";
 import { useAuth } from '../../auth/AuthContext';
 import { Link } from 'react-router-dom';
 import API_BASE_URL from '../../../config/apiConfig';
+import { apiRequest } from "../../../utils/api";
+
 
 
 const ListHotel = ()=> {
@@ -25,14 +27,42 @@ const ListHotel = ()=> {
         return (totalRating / reviews.length).toFixed(1); 
     };
 
+    // const fetchHotels = async(hotelNames) => {
+    //     const baseURL = `${API_BASE_URL}/api/hotels/`;
+    //     let url = baseURL 
+    //     if(hotelNames) {
+    //         url += `?name=${encodeURIComponent(hotelNames)}`;
+    //     }
+    //     try {
+    //         const response = await axios.get(url);
+    //         console.log(response.data);
+    //         setHotels(response.data);
+    //         const hotelsWithRatings = response.data.map(hotel => ({
+    //             ...hotel,
+    //             averageRating: calculateAverageRating(hotel.reviews)
+    //         }));
+    //         setHotels(hotelsWithRatings);
+    //     } catch (err) {
+    //         setError(err);
+    //     }
+    // }
+
     const fetchHotels = async(hotelNames) => {
-        const baseURL = `${API_BASE_URL}/api/hotels/`;
-        let url = baseURL 
-        if(hotelNames) {
-            url += `?name=${encodeURIComponent(hotelNames)}`;
+        // const baseURL = `${API_BASE_URL}/api/hotels/`;
+        // let url = baseURL 
+        // if(hotelNames) {
+        //     url += `?name=${encodeURIComponent(hotelNames)}`;
+        // }
+        if(hotelNames==null) {
+            hotelNames="";
         }
         try {
-            const response = await axios.get(url);
+            const data = {
+                location: "", 
+                name: hotelNames      
+            };
+            const response = await apiRequest(`${API_BASE_URL}/api/locations/hotels_by_location/`, 'POST', data, {});
+            console.log(response.data);
             setHotels(response.data);
             const hotelsWithRatings = response.data.map(hotel => ({
                 ...hotel,
@@ -43,7 +73,6 @@ const ListHotel = ()=> {
             setError(err);
         }
     }
-
     useEffect(() => {       
         fetchHotels(hotelNames);
     },[hotelNames]);
@@ -134,7 +163,7 @@ const ListHotel = ()=> {
                                                 <div class="utf_listing_item-container list-layout">
                                                     <Link to={`/detailhotel/${hotel.slug}`} className="utf_listing_item">
                                                         <div class="utf_listing_item-image">
-                                                            <img src={hotel.map_image} alt=""/>
+                                                            <img src={hotel.hotel_gallery[1].image} alt=""/>
                                                             <p>{hotel.map_image}</p>
                                                             <span class="like-icon"></span>
                                                             {/* <span class="tag"><i class="im im-icon-Hotel"></i> Hotels</span> */}

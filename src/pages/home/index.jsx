@@ -30,6 +30,11 @@ const Index = ()=>{
             navigate(`/listhotel?name=${encodeURIComponent(hotelName)}`); 
         else navigate(`/listhotel`);
     };
+    const handleSearchEx = () => {
+        if(hotelName != '')
+            navigate(`/listhotel?name=${encodeURIComponent(hotelName)}`); 
+        else navigate(`/listhotel`);
+    };
 
     const calculateAverageRating = (reviews) => {
         if (reviews.length === 0) return 0;
@@ -68,10 +73,35 @@ const Index = ()=>{
     }
 
     useEffect(() => {
+        // const fetchHotels = async () => {
+        //     console.log('baseURL: ' + baseURL);
+        //     try {
+        //         const response = await axios.get(`${baseURL}/api/hotels/`);
+        //         console.log(response.data);
+        //         const hotelsWithRatings = response.data.map(hotel => ({
+        //             ...hotel,
+        //             averageRating: calculateAverageRating(hotel.reviews)
+        //         }));
+        //         setHotels(hotelsWithRatings);
+        //         console.log(hotelsWithRatings);
+        //     } catch (err) {
+        //         setError(err.message);
+        //     } finally {
+        //         setLoading(false);
+        //     }
+        // };
         const fetchHotels = async () => {
             console.log('baseURL: ' + baseURL);
             try {
-                const response = await axios.get(`${baseURL}/api/hotels/`);
+                const data = {
+                    location: "", 
+                    name: ""      
+                };
+                const response = await axios.post(`${baseURL}/api/locations/hotels_by_location/`, data, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
                 console.log(response.data);
                 const hotelsWithRatings = response.data.map(hotel => ({
                     ...hotel,
@@ -263,7 +293,7 @@ const Index = ()=>{
                                             <li>
                                                 <div class="utf_carousel_item">
                                                     <Link to={`/detailhotel/${hotel.slug}`} class="utf_listing_item-container compact">
-                                                        <div class="utf_listing_item"> <img src={hotel.map_image} alt=""/>
+                                                        <div class="utf_listing_item"> <img src={hotel.hotel_gallery[1].image} alt=""/>
                                                             <span class="utf_open_now">Open Now</span>
                                                             <div class="utf_listing_item_content">
                                                                 <div class="utf_listing_prige_block">
