@@ -355,7 +355,7 @@ const Index = ()=>{
                 </div>
             </section>
 
-            <section class="utf_cta_area_item utf_cta_area2_block">
+            <section id="contact" class="utf_cta_area_item utf_cta_area2_block">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-8 col-md-offset-2">

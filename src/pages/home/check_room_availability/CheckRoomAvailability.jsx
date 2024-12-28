@@ -80,7 +80,7 @@ const CheckRoomAvailability = () => {
         };
 
         const fetchCartItemCount = async () => {
-            const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count/`; 
+            const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count`; 
             try {
                 const response = await axios.get(urlAPIGetCartCount, {
                     headers: {
@@ -228,7 +228,7 @@ const CheckRoomAvailability = () => {
 
     const handleAddToSelection = async (roomId, checkin, checkout, adults, childrens) => {
         let responseData;
-        const URL = `${baseURL}/api/add-cart-item/`;
+        const URL = `${baseURL}/api/add-cart-item`;
         const data = {
             "room": roomId,
             "check_in_date": checkin,
@@ -339,7 +339,7 @@ const CheckRoomAvailability = () => {
                                                 <input type="hidden" class="room_id_{{r.id}}" value="{{r.id}}" id="room_id"/>
                                                 <input type="hidden" class="room_number_{{r.id}}" value="{{r.room_number}}" id="room_number"/>
                                                 <button class="button border add-to-selection" data-index="{{r.id}}"
-                                                        onClick={() => handleAddToSelection(RoomAvailability.room_id, dateCheckin,dateCheckout,quantityAdults,quantityChildrens )}><i class="fas fa-shopping-cart"></i> Add To Selection</button> 
+                                                    onClick={() => handleAddToSelection(RoomAvailability.room_id, dateCheckin,dateCheckout,quantityAdults,quantityChildrens )}><i class="fas fa-shopping-cart"></i> Add To Selection</button> 
                                             </div>
                                         </div>
                                 </li>

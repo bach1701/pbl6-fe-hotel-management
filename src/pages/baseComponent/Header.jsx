@@ -16,6 +16,16 @@ const Header = () => {
     const baseURL = API_BASE_URL;
     const token = localStorage.getItem('accessToken');
 
+    const handleScroll = (sectionId) => {
+        window.location.href = `/`; 
+        setTimeout(() => {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 500);
+    };
+
     useEffect (() => {
         const fetchProfile = async () => {
             if (token) {
@@ -35,7 +45,7 @@ const Header = () => {
     },[location]);
 
     const fetchCartItemCount = async () => {
-        const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count/`; 
+        const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count`; 
         try {
             const response = await axios.get(urlAPIGetCartCount, {
                 headers: {
@@ -64,7 +74,7 @@ const Header = () => {
                                     </span>
                                 </button>
                             </div>
-                            <nav id="navigation" class="style_one">
+                            {/* <nav id="navigation" class="style_one">
                                 <ul id="responsive">
                                     <li><a href="/">Home</a></li>
                                     <li><a href="#">User Panel</a>
@@ -75,8 +85,25 @@ const Header = () => {
                                             <li><Link to="/user-profile/change-password">Change Password</Link></li>    
                                         </ul>
                                     </li>
-                                    <li><a href="index.jsx#about-us">About Us</a></li>
-                                    <li><a href="#">Contact</a></li>    
+                                    <li><a href="#about-us">About Us</a></li>
+                                    <li><a href="#">Contact</a></li> 
+                                    <li><a onClick={() => handleScroll('about-us')}>About Us</a></li>
+                                    <li><a onClick={() => handleScroll('contact')}>Contact</a></li>   
+                                </ul>
+                            </nav> */}
+                            <nav id="navigation" className="style_one">
+                                <ul id="responsive">
+                                    <li><Link to="/" onClick={() => handleScroll('')}>Home</Link></li>
+                                    <li><a href="#">User Panel</a>
+                                        <ul>
+                                            <li><Link to="/user-profile/history-booking">My Bookings</Link></li>
+                                            <li><Link to="/user-profile/history-review">My Reviews</Link></li>
+                                            <li><Link to="/user-profile/my-profile">My Profile</Link></li>
+                                            <li><Link to="/user-profile/change-password">Change Password</Link></li>    
+                                        </ul>
+                                    </li>
+                                    <li><a onClick={() => handleScroll('about-us')}>About Us</a></li>
+                                    <li><a onClick={() => handleScroll('contact')}>Contact</a></li>
                                 </ul>
                             </nav>
                             <div class="clearfix"></div>
