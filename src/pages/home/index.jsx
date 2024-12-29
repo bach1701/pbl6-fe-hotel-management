@@ -10,8 +10,8 @@ import Swal from 'sweetalert2';
 
 
 const Index = ()=>{
-    const navigate = useNavigate();
 
+    const navigate = useNavigate();
     const [hotels, setHotels] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -19,9 +19,6 @@ const Index = ()=>{
     const { setRoomCount } = useRoomCount();
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
-    const [rangePricies, setRangePricies] = useState([]);
-    const [combinedHotels, setCombinedHotels] = useState([]);
-
     const token = localStorage.getItem('accessToken');
     const baseURL = API_BASE_URL;
 

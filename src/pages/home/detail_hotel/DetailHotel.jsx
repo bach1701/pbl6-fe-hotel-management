@@ -8,6 +8,7 @@ import { apiRequest } from "../../../utils/api";
 
 
 const DetailHotel = () => {
+    
     const token = localStorage.getItem('accessToken');
     const { slug } = useParams(); 
     const [detailHotel, setDetailHotel] = useState(null);
