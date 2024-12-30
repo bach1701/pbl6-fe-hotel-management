@@ -45,13 +45,14 @@ const Header = () => {
     },[location]);
 
     const fetchCartItemCount = async () => {
-        const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count`; 
+        const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count/`; 
         try {
-            const response = await axios.get(urlAPIGetCartCount, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
-            });
+            // const response = await axios.get(urlAPIGetCartCount, {
+            //     headers: {
+            //         'Authorization': `Bearer ${token}`,
+            //     }
+            // });
+            const response = await apiRequest(urlAPIGetCartCount);
             const totalItems = response.data.total_items_in_cart; 
             console.log('Total items in cart:', totalItems); 
             setRoomCount(totalItems);

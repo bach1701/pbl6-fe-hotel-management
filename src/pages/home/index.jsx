@@ -7,15 +7,15 @@ import { Link } from 'react-router-dom';
 import { apiRequest } from "../../utils/api";
 import Swal from 'sweetalert2';
 
-
-
 const Index = ()=>{
 
     const navigate = useNavigate();
     const [hotels, setHotels] = useState([]);
+    const [featureHotels, setFeatureHotels] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [hotelName, setHotelName] = useState('');
+    const [cityName, setCityName] = useState('');
     const { setRoomCount } = useRoomCount();
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
@@ -23,20 +23,7 @@ const Index = ()=>{
     const baseURL = API_BASE_URL;
 
     const handleSearch = () => {
-        if(hotelName != '')
-            navigate(`/listhotel?name=${encodeURIComponent(hotelName)}`); 
-        else navigate(`/listhotel`);
-    };
-    const handleSearchEx = () => {
-        if(hotelName != '')
-            navigate(`/listhotel?name=${encodeURIComponent(hotelName)}`); 
-        else navigate(`/listhotel`);
-    };
-
-    const calculateAverageRating = (reviews) => {
-        if (reviews.length === 0) return 0;
-        const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-        return (totalRating / reviews.length).toFixed(1); 
+        navigate(`/listhotel?hotel-name=${encodeURIComponent(hotelName)}&city-name=${encodeURIComponent(cityName)}&price-min=0&price-max=0`);
     };
 
     const handleSendContactEmail = async () => {
@@ -70,23 +57,6 @@ const Index = ()=>{
     }
 
     useEffect(() => {
-        // const fetchHotels = async () => {
-        //     console.log('baseURL: ' + baseURL);
-        //     try {
-        //         const response = await axios.get(`${baseURL}/api/hotels/`);
-        //         console.log(response.data);
-        //         const hotelsWithRatings = response.data.map(hotel => ({
-        //             ...hotel,
-        //             averageRating: calculateAverageRating(hotel.reviews)
-        //         }));
-        //         setHotels(hotelsWithRatings);
-        //         console.log(hotelsWithRatings);
-        //     } catch (err) {
-        //         setError(err.message);
-        //     } finally {
-        //         setLoading(false);
-        //     }
-        // };
         const fetchHotels = async () => {
             console.log('baseURL: ' + baseURL);
             try {
@@ -94,32 +64,33 @@ const Index = ()=>{
                     location: "", 
                     name: ""      
                 };
-                const response = await axios.post(`${baseURL}/api/locations/hotels_by_location/`, data, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    }
-                });
+                const response = await axios.post(`${baseURL}/api/locations/hotels_by_location/`, data);
+                setHotels(response.data);
                 console.log(response.data);
-                const hotelsWithRatings = response.data.map(hotel => ({
-                    ...hotel,
-                    averageRating: calculateAverageRating(hotel.reviews)
-                }));
-                setHotels(hotelsWithRatings);
-                console.log(hotelsWithRatings);
             } catch (err) {
                 setError(err.message);
             } finally {
                 setLoading(false);
             }
         };
+
+        const fetchFeatureHotels = async () => {
+            console.log('baseURL: ' + baseURL);
+            try {
+                const response = await axios.get(`${baseURL}/api/featured-hotels/`);
+                setFeatureHotels(response.data);
+                console.log(response.data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         const fetchCartItemCount = async () => {
             const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count/`; 
             try {
-                const response = await axios.get(urlAPIGetCartCount, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    }
-                });
+                const response = await apiRequest(urlAPIGetCartCount);
                 const totalItems = response.data.total_items_in_cart; 
                 console.log('Total items in cart:', totalItems); 
                 setRoomCount(totalItems);
@@ -132,6 +103,7 @@ const Index = ()=>{
             fetchCartItemCount();
         }
         fetchHotels();
+        fetchFeatureHotels();
       }, []);
     
       if (loading) return <p>Loading hotels...</p>;
@@ -139,10 +111,7 @@ const Index = ()=>{
 
     return (
         <div id="main_wrapper">
-            {/* <Header /> */}
             <div class="clearfix"></div>
-
-            {/* Banner */}
             <div class="search_container_block main_search_block" data-background-image="images/home_section_1.jpg" style={{ backgroundImage: 'url("images/home_section_1.jpg")' }}>
                 <div class="main_inner_search_block">
                     <div class="container">
@@ -157,18 +126,10 @@ const Index = ()=>{
                                         />
                                     </div>
                                     <div class="main_input_search_part_item main-search-input-item search-input-icon">
-                                        <input type="text" placeholder="Type name of city..." id="booking-date-search"/>
-                                        {/* <i class="fa fa-calendar"></i> */}
+                                        <input type="text" placeholder="Type name of city..." id="booking-date-search"
+                                        value={cityName} onChange={(e)=>setCityName(e.target.value)} 
+                                        />
                                     </div>
-                                    {/* <div class="main_input_search_part_item intro-search-field">
-                                        <select data-placeholder="All Categories" class="selectpicker default" title="All Categories" data-live-search="true" data-selected-text-format="count" data-size="5">
-                                            <option>Food & Restaurants </option>
-                                            <option>Shop & Education</option>
-                                            <option>Education</option>
-                                            <option>Business</option>
-                                            <option>Events</option>
-                                        </select>
-                                    </div> */}
                                     <button class="button" onclick="window.location.href='listings_half_screen_map_list.html'" onClick={handleSearch}>Search</button>
                                 </div>
                             </div>
@@ -286,9 +247,9 @@ const Index = ()=>{
                             <div class="col-md-12">
                                 <div class="simple_slick_carousel_block utf_dots_nav">
                                     <ul className="hotels-list">
-                                        {hotels.map(hotel=>(
+                                        {featureHotels.map(hotel=>(
                                             <li>
-                                                <div class="utf_carousel_item">
+                                                <div class="utf_carousel_item" style={{marginTop: '10px'}}>
                                                     <Link to={`/detailhotel/${hotel.slug}`} class="utf_listing_item-container compact">
                                                         <div class="utf_listing_item"> <img src={hotel.hotel_gallery[1].image} alt=""/>
                                                             <span class="utf_open_now">Open Now</span>
@@ -303,7 +264,7 @@ const Index = ()=>{
                                                             </div>
                                                         </div>
                                                         <div class="utf_star_rating_section" data-rating="4.5">
-                                                            <div class="utf_counter_star_rating">({hotel.averageRating})</div>
+                                                            <div class="utf_counter_star_rating">({hotel.average_rating}) / ({hotel.review_count} Reviews)</div>
                                                             <span class="like-icon"></span>
                                                         </div>
                                                     </Link>
@@ -464,56 +425,6 @@ const Index = ()=>{
                     </div>
                 </div>
             </section>
-
-            {/* Footer */}
-            {/* <div id="footer" class="footer_sticky_part">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-8 col-sm-12 col-xs-12">
-                            <h4>Giới thiệu về Chúng Tôi</h4>
-                            <p>
-                            Chào mừng bạn đến với Travel-PBL6, nơi chúng tôi kết nối du khách với những trải nghiệm lưu trú tuyệt vời tại hàng trăm khách sạn trên toàn quốc. Với sứ mệnh mang đến sự thuận tiện và dễ dàng trong việc đặt phòng, chúng tôi tự hào cung cấp một nền tảng trực tuyến đơn giản và thân thiện với người dùng.
-                            </p>
-                            <h4>Lịch Sử Hình Thành</h4>
-                            <p>
-                            Travel-PBL6 được thành lập vào năm 2024 với mong muốn cách mạng hóa trải nghiệm đặt phòng khách sạn. Đội ngũ sáng lập của chúng tôi gồm những chuyên gia trong ngành du lịch, luôn nỗ lực để cải thiện và tối ưu hóa quy trình đặt phòng cho mọi khách hàng.
-                            </p>
-                            <h4>Liên Hệ với Chúng Tôi</h4>
-                            <p>
-                            Nếu bạn có bất kỳ câu hỏi nào hoặc cần hỗ trợ, hãy liên hệ với chúng tôi qua travel-pbl6.dut.udn@gmail.com!
-                            </p>
-                        </div>
-                        <div class="col-md-2 col-sm-3 col-xs-6">
-                            <h4>My Account</h4>
-                            <ul class="social_footer_link">
-                                <li><a href="#">Hồ sơ của tôi</a></li>
-                                <li><a href="#">Giỏ hàng của tôi</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-md-2 col-sm-3 col-xs-6">
-                            <h4>Pages</h4>
-                            <ul class="social_footer_link">
-                                <li><a href="#">Blog & Tip</a></li>
-                                <li><a href="#">Gợi ý địa điểm du lịch</a></li>
-                                <li><a href="#">Khách sạn nổi bật</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-md-2 col-sm-3 col-xs-6">
-                            <h4>Help</h4>
-                            <ul class="social_footer_link">
-                                <li><a href="#">Đăng nhập</a></li>
-                                <li><a href="#">Đăng kí</a></li>
-                                <li><a href="#">Liên hệ</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="footer_copyright_part">Copyright © 2022 All Rights Reserved.</div>
-                        </div>
-                    </div>
-                </div>
-            </div> */}
             <div id="bottom_backto_top"><a href="#"></a></div>
         </div>
     )

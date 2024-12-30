@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import API_BASE_URL from "../../config/apiConfig";
 import { apiRequest } from "../../utils/api";
-import { Anchor } from 'antd';
-import Header from "../baseComponent/Header";
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';

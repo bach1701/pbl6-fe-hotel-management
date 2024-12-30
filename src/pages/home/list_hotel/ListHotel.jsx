@@ -1,45 +1,45 @@
 import React, {useState, useEffect} from "react"
 import { useLocation } from 'react-router-dom';
 import axios from "axios"
-import { useAuth } from '../../auth/AuthContext';
 import { Link } from 'react-router-dom';
 import API_BASE_URL from '../../../config/apiConfig';
-import { apiRequest } from "../../../utils/api";
+import PriceRangeSlider from "../../baseComponent/RangeSlider";
 import { useNavigate } from 'react-router-dom';
-
-
+import Swal from 'sweetalert2';
 
 
 const ListHotel = ()=> {
 
+    const navigate = useNavigate();
     const query = new URLSearchParams(useLocation().search);
-    const initialHotelName = query.get('name');
-    const [hotelNames, setHotelNames] = useState(initialHotelName);
-    const [searchTerm, setSearchTerm] = useState(initialHotelName);
+    let initialHotelName = query.get('hotel-name');
+    let initialCityName = query.get('city-name');
+    let initialMinPrice = query.get('price-min');
+    let initialMaxPrice = query.get('price-max');
+    const [hotelNameSearch, setHotelNameSearch] = useState(initialHotelName);
+    const [locationSearch, setLocationSearch] = useState(initialCityName);
     const [hotels, setHotels] = useState([]);
-    const { token } = useAuth();
     const [error, setError] = useState(null);
     const [location, setLocation] = useState({ latitude: null, longitude: null, city: null });
     const [currentLocation, setCurrentLocation] = useState('');
-    const [minPrice, setMinPrice] = useState(0);
-    const [maxPrice, setMaxPrice] = useState(0);
+    const [minPrice, setMinPrice] = useState(initialMinPrice);
+    const [maxPrice, setMaxPrice] = useState(initialMaxPrice);
+    const [currentPage, setCurrentPage] = useState(1);
+    const hotelsPerPage = 3;
 
-    console.log(initialHotelName);
-    console.log(token);
+    const totalPages = Math.ceil(hotels.length / hotelsPerPage);
 
-    const changeFilterPrice = (type, quantity) => {
-        if(type === 'min') {
-            setMinPrice(prev => Math.max(prev + quantity, 0));
-        }
-        else {
-            setMaxPrice(prev => Math.max(prev + quantity, 0));
-        }
-    }
+    const indexOfLastHotel = currentPage * hotelsPerPage;
+    const indexOfFirstHotel = indexOfLastHotel - hotelsPerPage;
+    const currentHotels = hotels.slice(indexOfFirstHotel, indexOfLastHotel);
 
-    const calculateAverageRating = (reviews) => {
-        if (reviews.length === 0) return 0;
-        const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-        return (totalRating / reviews.length).toFixed(1); 
+    const goToPage = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+    
+    const handleRangeChange = (range) => {
+        setMinPrice(range[0]);
+        setMaxPrice(range[1]);
     };
 
     const handleGetLocationUser = () => {
@@ -65,61 +65,79 @@ const ListHotel = ()=> {
             const response = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
             const city = response.data.address.city || response.data.address.town || response.data.address.village || "Unknown location";
             setLocation((prev) => ({ ...prev, city }));
+            setHotelNameSearch('');
+            setLocationSearch(city);
             alert(`Your current location is ${city}`);
-            setCurrentLocation(city);
+            navigate(`/listhotel?hotel-name=&city-name=${encodeURIComponent(city)}&price-min=0&price-max=0`); 
         } catch (error) {
             console.error("Error fetching city name:", error);
             setError("Could not fetch city name.");
         }
     };
 
-    // const fetchHotels = async(hotelNames) => {
-    //     const baseURL = `${API_BASE_URL}/api/hotels/`;
-    //     let url = baseURL 
-    //     if(hotelNames) {
-    //         url += `?name=${encodeURIComponent(hotelNames)}`;
-    //     }
-    //     try {
-    //         const response = await axios.get(url);
-    //         console.log(response.data);
-    //         setHotels(response.data);
-    //         const hotelsWithRatings = response.data.map(hotel => ({
-    //             ...hotel,
-    //             averageRating: calculateAverageRating(hotel.reviews)
-    //         }));
-    //         setHotels(hotelsWithRatings);
-    //     } catch (err) {
-    //         setError(err);
-    //     }
-    // }
-
-    const fetchHotels = async(hotelNames, location) => {
+    const fetchHotels = async(hotelNames, location, minPrice, maxPrice) => {
+        console.log(hotelNames, location);
         if(hotelNames == null) {
             hotelNames = "";
         }
         if(location == null) {
             location = "";
         }
+        if(minPrice == null) {
+            minPrice = "";
+        }
+        if(maxPrice == null) {
+            maxPrice = "";
+        }
         try {
             const data = {
                 location: location, 
-                name: hotelNames      
+                name: hotelNames,
+                price_max: maxPrice,
+                price_min: minPrice
+                      
             };
-            const response = await apiRequest(`${API_BASE_URL}/api/locations/hotels_by_location/`, 'POST', data, {});
+            console.log(hotelNames, location, minPrice, maxPrice);
+            const response = await axios.post(`${API_BASE_URL}/api/locations/hotels_by_location/`, data);
             console.log(response.data);
             setHotels(response.data);
-            const hotelsWithRatings = response.data.map(hotel => ({
-                ...hotel,
-                averageRating: calculateAverageRating(hotel.reviews)
-            }));
-            setHotels(hotelsWithRatings);
-        } catch (err) {
-            setError(err);
+        } catch (error) {
+            if (error.response && error.response.data) {
+                const errorMessage = error.response 
+                ? error.response.data.error || error.message 
+                : error.message;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: errorMessage,
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            } 
         }
     }
+
     useEffect(() => {       
-        fetchHotels(hotelNames, currentLocation);
-    },[hotelNames, currentLocation]);
+        fetchHotels(initialHotelName, initialCityName, initialMinPrice, initialMaxPrice);
+    },[initialHotelName, initialCityName, initialMinPrice, initialMaxPrice]);
+
+    const handleSearch = () => {
+        const hotelName = encodeURIComponent(hotelNameSearch);
+        const cityName = encodeURIComponent(locationSearch);
+        const url = `/listhotel?hotel-name=${hotelName}&city-name=${cityName}&price-min=0&price-max=0`;
+        
+        // Chuyển hướng và reload trang
+        window.location.href = url;
+    };
+
+    const handleFilterHotel = () => {
+        const hotelName = encodeURIComponent(hotelNameSearch);
+        const cityName = encodeURIComponent(locationSearch);
+        const priceMin = encodeURIComponent(minPrice);
+        const priceMax = encodeURIComponent(maxPrice);
+        const url = `/listhotel?hotel-name=${hotelName}&city-name=${cityName}&price-min=${priceMin}&price-max=${priceMax}`;
+        window.location.href = url;
+    }
 
     return (
         <>
@@ -141,70 +159,57 @@ const ListHotel = ()=> {
                         </div>
                     </div>
                 </div>
+                
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-8 col-md-8">
-                            <div class="listing_filter_block">
-                                <div class="col-md-2 col-xs-2">
-                                    <div class="utf_layout_nav"> <a href="#" class="list active"><i class="fa fa-align-justify"></i></a> </div>
-                                </div>
-                                <div class="col-md-10 col-xs-10">
-                                    <div class="sort-by">
-                                        <div class="utf_sort_by_select_item sort_by_margin">
-                                            <select data-placeholder="Sort by Listing" class="utf_chosen_select_single"> 
-                                                <option>Sort</option>
-                                                <option>Price (Low to High)</option>
-                                                <option>Price (High to Low)</option>
-                                                <option>Highest Reviewe</option>
-                                                <option>Lowest Reviewe</option>                  
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="sort-by">
-                                        <div class="utf_sort_by_select_item utf_search_map_section">
-                                            <ul>
-                                                <li><a class="utf_common_button" onClick={handleGetLocationUser}><i class="fa fa-dot-circle-o"></i>Near Me</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="sort-by">
-                                        <div class="utf_sort_by_select_item utf_search_map_section">
-                                            <ul>
-                                                <li><a class="utf_common_button" onClick={handleGetLocationUser}><i class="fa fa-list"></i>All</a></li>
-                                            </ul>
-                                        </div>
+                            <div class="main_input_search_part second_input_search_part" style={{ marginBottom: '20px' }}>
+                                <div class="sort-by">
+                                    <div class="utf_sort_by_select_item utf_search_map_section" style={{paddingBottom: '20px', paddingLeft: '5px'}}>
+                                        {/* <ul> */}
+                                            <a class="utf_common_button" style={{ cursor: 'pointer' }} onClick={handleGetLocationUser}><i class="fa fa-location-pin"></i>Near Me</a>
+                                        {/* </ul> */}
                                     </div>
                                 </div>
+                                <div class="main_input_search_part_item">
+                                    <input type="text" placeholder="Type name of hotel..." 
+                                    value={hotelNameSearch} onChange={(e)=>setHotelNameSearch(e.target.value)} />
+                                </div>
+                                <div class="main_input_search_part_item main-search-input-item search-input-icon">
+                                    <input type="text" placeholder="Type name of city..." id="booking-date-search"
+                                    value={locationSearch} onChange={(e)=>setLocationSearch(e.target.value)} />
+                                </div>
+                                <button class="button second_input_search_part" styple={{}} onclick="window.location.href='listings_half_screen_map_list.html'" onClick={handleSearch}>Search</button>
                             </div>
                             <div class="row">
                                 <ul>
-                                    {hotels.map(hotel =>(
+                                    {currentHotels.map(hotel => (
                                         <li key={hotel.id}>
-                                            <div class="col-lg-12 col-md-12">
-                                                <div class="utf_listing_item-container list-layout">
+                                            <div className="col-lg-12 col-md-12" style={{ paddingRight: '0px'}}>
+                                                <div className="utf_listing_item-container list-layout">
                                                     <Link to={`/detailhotel/${hotel.slug}`} className="utf_listing_item">
-                                                        <div class="utf_listing_item-image">
-                                                            <img src={hotel.hotel_gallery[1].image} alt=""/>
-                                                            <p>{hotel.map_image}</p>
-                                                            <span class="like-icon"></span>
-                                                            {/* <span class="tag"><i class="im im-icon-Hotel"></i> Hotels</span> */}
-                                                            <div class="utf_listing_prige_block utf_half_list">
-                                                                <span class="utf_meta_listing_price"><i class="fa fa-tag"></i>${hotel.price_min} - ${hotel.price_max}</span>
-                                                                {/* <span class="utp_approve_item"><i class="utf_approve_listing"></i></span> */}
-                                                            </div>
+                                                    <div className="utf_listing_item-image">
+                                                        <img src={hotel.hotel_gallery[1].image} alt="" />
+                                                        <p>{hotel.map_image}</p>
+                                                        <span className="like-icon"></span>
+                                                        <div className="utf_listing_prige_block utf_half_list">
+                                                        <span className="utf_meta_listing_price">
+                                                            <i className="fa fa-tag"></i>${hotel.price_min} - ${hotel.price_max}
+                                                        </span>
                                                         </div>
-                                                        <span class="utf_open_now">Open Now</span>
-                                                        <div class="utf_listing_item_content">
-                                                            <div class="utf_listing_item-inner">
-                                                                <h3>{hotel.name}</h3>
-                                                                <span><i class="fa fa-map-marker"></i>{hotel.address}</span>
-                                                                <span><i class="fa fa-phone"></i>{hotel.mobile}</span>
-                                                                <div class="utf_star_rating_section" data-rating="4.5">
-                                                                    <div class="utf_counter_star_rating">({hotel.averageRating})</div>
-                                                                </div>
-                                                                <p>{hotel.description}</p>
-                                                            </div>
+                                                    </div>
+                                                    <span className="utf_open_now">Open Now</span>
+                                                    <div className="utf_listing_item_content">
+                                                        <div className="utf_listing_item-inner">
+                                                        <h3>{hotel.name}</h3>
+                                                        <span><i className="fa fa-map-marker"></i>{hotel.address}</span>
+                                                        <span><i className="fa fa-phone"></i>{hotel.mobile}</span>
+                                                        <div className="utf_star_rating_section" data-rating="4.5">
+                                                            <div className="utf_counter_star_rating">({hotel.average_rating}) / ({hotel.review_count} Reviews)</div>
                                                         </div>
+                                                        <p>{hotel.description}</p>
+                                                        </div>
+                                                    </div>
                                                     </Link>
                                                 </div>
                                             </div>
@@ -215,163 +220,78 @@ const ListHotel = ()=> {
                             <div class="clearfix"></div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="utf_pagination_container_part margin-top-20 margin-bottom-70">
-                                        <nav class="pagination">
-                                            <ul>
-                                                <li><a href="#"><i class="sl sl-icon-arrow-left"></i></a></li>
-                                                <li><a href="#" class="current-page">1</a></li>
-                                                <li><a href="#">2</a></li>
-                                                <li><a href="#">3</a></li>
-                                                <li><a href="#">4</a></li>
-                                                <li><a href="#"><i class="sl sl-icon-arrow-right"></i></a></li>
-                                            </ul>
+                                    <div className="utf_pagination_container_part margin-top-20 margin-bottom-70">
+                                        <nav className="pagination">
+                                        <ul>
+                                            <li>
+                                            <a href="#" onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>
+                                                <i className="sl sl-icon-arrow-left"></i>
+                                            </a>
+                                            </li>
+                                            {Array.from({ length: totalPages }, (_, index) => (
+                                            <li key={index}>
+                                                <a
+                                                href="#"
+                                                onClick={() => goToPage(index + 1)}
+                                                className={currentPage === index + 1 ? 'current-page' : ''}
+                                                >
+                                                {index + 1}
+                                                </a>
+                                            </li>
+                                            ))}
+                                            <li>
+                                            <a href="#" onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}>
+                                                <i className="sl sl-icon-arrow-right"></i>
+                                            </a>
+                                            </li>
+                                        </ul>
                                         </nav>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4">
-                                <div class="utf_box_widget margin-bottom-35">
+                                <div class="utf_box_widget margin-bottom-35" style={{marginLeft: '10px'}}>
                                     <h3><i class="sl sl-icon-direction"></i> Filters</h3>
-                                    {/* <div class="row with-forms">
-                                        <div class="col-md-12">
-                                            <input type="text" placeholder="What are you looking for?" 
-                                            value={searchTerm} 
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                            />
-                                        </div>
-                                    </div> */}
                                     <div class="row with-forms">
                                         <div class="col-md-12">
-                                            <div class="input-with-icon location">
-                                                <input type="text" placeholder="Search Location..." value="" />
-                                                <a href="#"><i class="sl sl-icon-location"></i></a> </div>
+                                            <div class="utf_sort_by_select_item sort_by_margin" style={{ paddingTop: '20px', marginBottom: '0px' }}>
+                                                <select data-placeholder="Sort by Listing" class="utf_chosen_select_single" style={{ marginBottom: '0px' }}> 
+                                                    <option>Sort</option>
+                                                    <option>Price (Low to High)</option>
+                                                    <option>Price (High to Low)</option>
+                                                    <option>Rating (Low to High)</option>
+                                                    <option>Rating (Low to High)</option>                  
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
+                                    <PriceRangeSlider 
+                                        onRangeChange={handleRangeChange} 
+                                        min={minPrice} 
+                                        max={maxPrice} 
+                                    />
                                     <div class="qtyButtons">
                                         <div class="qtyTitle">Min Price</div>
-                                        <button className="btn-decrement" style={{width:'40px', border:'none' }}
-                                         onClick={() => changeFilterPrice('min', -50)}>-</button>
+                                        {/* <button className="btn-decrement" style={{width:'40px', border:'none' }}
+                                         onClick={() => changeFilterPrice('min', -50)}>-</button> */}
                                         <input type="text" name="min" value={minPrice}/>
-                                        <button className="btn-increment" style={{width:'40px', border:'none' }}
-                                         onClick={() => changeFilterPrice('min', 50)}>+</button>
+                                        {/* <button className="btn-increment" style={{width:'40px', border:'none' }}
+                                         onClick={() => changeFilterPrice('min', 50)}>+</button> */}
                                     </div>
                                     <div class="qtyButtons">
                                         <div class="qtyTitle">Max Price</div>
-                                        <button className="btn-decrement" style={{width:'40px', border:'none' }}
-                                         onClick={() => changeFilterPrice('max', -50)}>-</button>
+                                        {/* <button className="btn-decrement" style={{width:'40px', border:'none' }}
+                                         onClick={() => changeFilterPrice('max', -50)}>-</button> */}
                                         <input type="text" name="max" value={maxPrice}/>
-                                        <button className="btn-increment" style={{width:'40px', border:'none' }}
-                                         onClick={() => changeFilterPrice('max', 50)}>+</button>
+                                        {/* <button className="btn-increment" style={{width:'40px', border:'none' }}
+                                         onClick={() => changeFilterPrice('max', 50)}>+</button> */}
                                     </div>
-                                    <a href="#" class="more-search-options-trigger margin-bottom-10" data-open-title="More Filters Options" data-close-title="More Filters Options"></a>
-                                    {/* <div class="more-search-options relative">
-                                        <div class="checkboxes one-in-row margin-bottom-15">
-                                            <input id="check-a" type="checkbox" name="check"/>
-                                            <label for="check-a">Real Estate</label>
-                                            <input id="check-b" type="checkbox" name="check"/>
-                                            <label for="check-b">Friendly Workspace</label>
-                                            <input id="check-c" type="checkbox" name="check"/>
-                                            <label for="check-c">Instant Book</label>
-                                            <input id="check-d" type="checkbox" name="check"/>
-                                            <label for="check-d">Wireless Internet</label>
-                                            <input id="check-e" type="checkbox" name="check"/>
-                                            <label for="check-e">Free Parking</label>
-                                            <input id="check-f" type="checkbox" name="check"/>
-                                            <label for="check-f">Elevator in Building</label>
-                                            <input id="check-g" type="checkbox" name="check"/>
-                                            <label for="check-g">Restaurant</label>
-                                            <input id="check-h" type="checkbox" name="check"/>
-                                            <label for="check-h">Dance Floor</label>
-                                        </div>
-                                    </div> */}
-                                    <button class="button fullwidth_block margin-top-5">Apply</button>
+                                    <button class="button fullwidth_block margin-top-5" onClick={handleFilterHotel}>Apply</button>
                                 </div>
                         </div>
                     </div>
                 </div>
-
-                {/* <section class="utf_cta_area_item utf_cta_area2_block">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="utf_subscribe_block clearfix">
-                                    <div class="col-md-8 col-sm-7">
-                                        <div class="section-heading">
-                                            <h2 class="utf_sec_title_item utf_sec_title_item2">Subscribe to Newsletter!</h2>
-                                            <p class="utf_sec_meta">
-                                                Subscribe to get latest updates and information.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-5">
-                                        <div class="contact-form-action">
-                                            <form method="post">
-                                                <span class="la la-envelope-o"></span>
-                                                <input class="form-control" type="email" placeholder="Enter your email" required=""/>
-                                                <button class="utf_theme_btn" type="submit">Subscribe</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <div id="footer" class="footer_sticky_part">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-2 col-sm-3 col-xs-6">
-                                <h4>Useful Links</h4>
-                                <ul class="social_footer_link">
-                                    <li><a href="#">Home</a></li>
-                                    <li><a href="#">Listing</a></li>
-                                    <li><a href="#">Blog</a></li>
-                                    <li><a href="#">Privacy Policy</a></li>
-                                    <li><a href="#">Contact</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-md-2 col-sm-3 col-xs-6">
-                                <h4>My Account</h4>
-                                <ul class="social_footer_link">
-                                    <li><a href="#">Dashboard</a></li>
-                                    <li><a href="#">Profile</a></li>
-                                    <li><a href="#">My Listing</a></li>
-                                    <li><a href="#">Favorites</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-md-2 col-sm-3 col-xs-6">
-                                <h4>Pages</h4>
-                                <ul class="social_footer_link">
-                                    <li><a href="#">Blog</a></li>
-                                    <li><a href="#">Our Partners</a></li>
-                                    <li><a href="#">How It Work</a></li>
-                                    <li><a href="#">Privacy Policy</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-md-2 col-sm-3 col-xs-6">
-                                <h4>Help</h4>
-                                <ul class="social_footer_link">
-                                    <li><a href="#">Sign In</a></li>
-                                    <li><a href="#">Register</a></li>
-                                    <li><a href="#">Add Listing</a></li>
-                                    <li><a href="#">Pricing</a></li>
-                                    <li><a href="#">Contact Us</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-md-4 col-sm-12 col-xs-12">
-                                <h4>About Us</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="footer_copyright_part">Copyright © 2022 All Rights Reserved.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
                 <div id="bottom_backto_top"><a href="#"></a></div>
             </div>
 

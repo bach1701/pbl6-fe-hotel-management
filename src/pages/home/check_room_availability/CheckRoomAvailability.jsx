@@ -80,7 +80,7 @@ const CheckRoomAvailability = () => {
         };
 
         const fetchCartItemCount = async () => {
-            const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count`; 
+            const urlAPIGetCartCount = `${baseURL}/api/get_cart_item_count/`; 
             try {
                 const response = await axios.get(urlAPIGetCartCount, {
                     headers: {
@@ -228,7 +228,7 @@ const CheckRoomAvailability = () => {
 
     const handleAddToSelection = async (roomId, checkin, checkout, adults, childrens) => {
         let responseData;
-        const URL = `${baseURL}/api/add-cart-item`;
+        const URL = `${baseURL}/api/add-cart-item/`;
         const data = {
             "room": roomId,
             "check_in_date": checkin,

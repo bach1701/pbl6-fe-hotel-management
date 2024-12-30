@@ -22666,3 +22666,28 @@ body{margin-top:20px;
   margin: 0 5px; /* Khoảng cách bên trái và bên phải giữa các thẻ */
   box-sizing: border-box; /* Tính padding và margin vào chiều rộng */
 }
+
+.rc-slider-track {
+  background-color: #8400FF !important;
+}
+
+.rc-slider-handle, .rc-slider-dot-active {
+  border-color: #8400FF !important;
+}
+
+.second_input_search_part {
+  padding: 9px;
+  margin-left: 15px;
+  margin-right: 15px;
+  border-radius: 0px;
+  margin-top: 0px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.second_input_search_part button.button {
+  border-radius: 3px;
+}
+
+
+
+

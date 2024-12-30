@@ -4,11 +4,13 @@ import axios from "axios";
 import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import API_BASE_URL from '../../../config/apiConfig';
-import { apiRequest } from "../../../utils/api";
-
+import Slideshow from "../../baseComponent/slide-show/Slideshow";
 
 const DetailHotel = () => {
     
+    const baseURL = API_BASE_URL;
+    const navigate = useNavigate();
+
     const token = localStorage.getItem('accessToken');
     const { slug } = useParams(); 
     const [detailHotel, setDetailHotel] = useState(null);
@@ -30,10 +32,17 @@ const DetailHotel = () => {
     const [averageRating, setAverageRating] = useState(0);
     const [inforReceptionist, setInforReceptionist] = useState({});
     const [publicCoupon, setPublicCoupon] = useState([]);
+    const [currentReviewPage, setCurrentReviewPage] = useState(1);
 
-    const baseURL = API_BASE_URL;
+    const reviewsPerPage = 2;
+    const totalReviewPages = Math.ceil(listHotelReviews.length / reviewsPerPage);
+    const indexOfLastReview = currentReviewPage * reviewsPerPage;
+    const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
+    const currentReviews = listHotelReviews.slice(indexOfFirstReview, indexOfLastReview);
 
-    const navigate = useNavigate();
+    const goToReviewPage = (pageNumber) => {
+        setCurrentReviewPage(pageNumber);
+    };
 
     const changeQuantity = (type, quantity) => {
         if(type === 'adults') {
@@ -118,7 +127,6 @@ const DetailHotel = () => {
                     console.log('responseData : ', responseData);
                     navigate(`/checkroomavailability/${encodeURIComponent(responseData.slug)}?room-type=${encodeURIComponent(responseData.room_type)}&date-checkin=${encodeURIComponent(checkin)}&date-checkout=${encodeURIComponent(checkout)}&adults=${encodeURIComponent(adults)}&childrens=${encodeURIComponent(childrens)}`);
                 } catch (error) {
-                    // Xử lý lỗi khi không có phòng
                     if (error.response && error.response.data) {
                         const errorMessage = error.response 
                         ? error.response.data.error || error.message 
@@ -300,6 +308,16 @@ const DetailHotel = () => {
         return `${yyyy}-${mm}-${dd} - ${hh}:${min}:${sec}`;
     };
 
+    const copyToClipboard = () => {
+        const url = window.location.href;
+    
+        navigator.clipboard.writeText(url).then(() => {
+          alert('URL đã được sao chép vào clipboard!');
+        }).catch(err => {
+          console.error('Không thể sao chép URL: ', err);
+        });
+    };
+
   
     if (loading) return <p>Loading hotel details...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -307,15 +325,8 @@ const DetailHotel = () => {
     return (
         <>
             <div id="main_wrapper">
-                {/* <Header /> */}
                 <div class="clearfix"></div>
-                <div id="utf_listing_gallery_part" class="utf_listing_section">
-                    <div class="utf_listing_slider utf_gallery_container margin-bottom-0">
-                        {hotelgalleries.map(hotelgallery => (
-                            <img src={`${hotelgallery.image}`} alt="" class="item utf_gallery"/>
-                        ))}
-                    </div>
-                </div>
+                <Slideshow images={hotelgalleries.map(gallery => ({ url: gallery.image, caption: gallery.caption || '' }))} />
                 <div class="container">
                     <div class="row utf_sticky_main_wrapper">
                         <div class="col-lg-8 col-md-8">
@@ -328,10 +339,11 @@ const DetailHotel = () => {
                                         <div class="utf_counter_star_rating">({averageRating.toFixed(1)}) / ({listHotelReviews.length} Reviews)</div>
                                     </div>
                                     <ul class="listing_item_social">
-                                        <li><a href="#"><i class="fa fa-bookmark"></i> Bookmark</a></li>
-                                        <li><a href="#"><i class="fa fa-star"></i> Add Review</a></li>
+                                        <li><a href="#nav"><i class="fa fa-star"></i> Add Review</a></li>
+                                        <li><a href="#" onClick={(e) => { e.preventDefault(); copyToClipboard(); }}>
+                                            <i className="fa fa-share"></i> Share
+                                        </a></li>
                                         <li><a href="#"><i class="fa fa-flag"></i> Featured</a></li>
-                                        <li><a href="#"><i class="fa fa-share"></i> Share</a></li>
                                         <li><a href="#" class="now_open">Open Now</a></li>
                                     </ul>
                                 </div>
@@ -480,33 +492,54 @@ const DetailHotel = () => {
                                 </div>
                                 <div class="comments utf_listing_reviews">
                                     <ul>
-                                        {listHotelReviews.map((listHotelReview)=> (
-                                            <li key={listHotelReview.id}>
-                                                <div class="avatar"><img src={`${baseURL}/${listHotelReview.profile_image}`} alt="" /></div>
-                                                <div class="utf_comment_content">
-                                                    <div class="utf_arrow_comment"></div>
-                                                    <div class="utf_star_rating_section" data-rating="5"></div>
-                                                    <a href="#" class="rate-review">Helpful Review <i class="fa fa-thumbs-up"></i></a>
-                                                    <div class="utf_by_comment">{listHotelReview.email}<span class="date"><i class="fa fa-clock-o"></i>{formatDate(listHotelReview.date)}</span> </div>
-                                                    <p>{listHotelReview.review_text}</p>
-                                                </div>
-                                            </li>
+                                        {currentReviews.map((listHotelReview) => (
+                                        <li key={listHotelReview.id}>
+                                            <div className="avatar">
+                                            <img src={`${baseURL}/${listHotelReview.profile_image}`} alt="" />
+                                            </div>
+                                            <div className="utf_comment_content">
+                                            <div className="utf_arrow_comment"></div>
+                                            <div className="utf_star_rating_section" data-rating="5"></div>
+                                            <a href="#" className="rate-review">Helpful Review <i className="fa fa-thumbs-up"></i></a>
+                                            <div className="utf_by_comment">
+                                                {listHotelReview.email}
+                                                <span className="date"><i className="fa fa-clock-o"></i>{formatDate(listHotelReview.date)}</span>
+                                            </div>
+                                            <p>{listHotelReview.review_text}</p>
+                                            </div>
+                                        </li>
                                         ))}
                                     </ul>
                                 </div>
                                 <div class="clearfix"></div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="utf_pagination_container_part margin-top-30">
-                                            {/* <nav class="pagination">
+                                        <div class="utf_pagination_container_part margin-top-30" id="nav">
+                                            <nav className="pagination">
                                                 <ul>
-                                                    <li><a href="#"><i class="sl sl-icon-arrow-left"></i></a></li>
-                                                    <li><a href="#" class="current-page">1</a></li>
-                                                    <li><a href="#">2</a></li>
-                                                    <li><a href="#">3</a></li>
-                                                    <li><a href="#"><i class="sl sl-icon-arrow-right"></i></a></li>
+                                                    <li>
+                                                    <a href="#" onClick={(e) => { e.preventDefault(); goToReviewPage(currentReviewPage - 1); }} disabled={currentReviewPage === 1}>
+                                                        <i className="sl sl-icon-arrow-left"></i>
+                                                    </a>
+                                                    </li>
+                                                    {Array.from({ length: totalReviewPages }, (_, index) => (
+                                                    <li key={index}>
+                                                        <a
+                                                        href="#"
+                                                        onClick={(e) => { e.preventDefault(); goToReviewPage(index + 1); }}
+                                                        className={currentReviewPage === index + 1 ? 'current-page' : ''}
+                                                        >
+                                                        {index + 1}
+                                                        </a>
+                                                    </li>
+                                                    ))}
+                                                    <li>
+                                                    <a href="#" onClick={(e) => { e.preventDefault(); goToReviewPage(currentReviewPage + 1); }} disabled={currentReviewPage === totalReviewPages}>
+                                                        <i className="sl sl-icon-arrow-right"></i>
+                                                    </a>
+                                                    </li>
                                                 </ul>
-                                            </nav> */}
+                                            </nav>
                                         </div>
                                     </div>
                                 </div>
