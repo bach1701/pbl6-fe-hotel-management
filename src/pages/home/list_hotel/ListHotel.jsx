@@ -7,7 +7,6 @@ import PriceRangeSlider from "../../baseComponent/RangeSlider";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-
 const ListHotel = ()=> {
 
     const navigate = useNavigate();
@@ -24,6 +23,7 @@ const ListHotel = ()=> {
     const [currentLocation, setCurrentLocation] = useState('');
     const [minPrice, setMinPrice] = useState(initialMinPrice);
     const [maxPrice, setMaxPrice] = useState(initialMaxPrice);
+    const [sortOption, setSortOption] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const hotelsPerPage = 3;
 
@@ -125,8 +125,6 @@ const ListHotel = ()=> {
         const hotelName = encodeURIComponent(hotelNameSearch);
         const cityName = encodeURIComponent(locationSearch);
         const url = `/listhotel?hotel-name=${hotelName}&city-name=${cityName}&price-min=0&price-max=0`;
-        
-        // Chuyển hướng và reload trang
         window.location.href = url;
     };
 
@@ -138,6 +136,33 @@ const ListHotel = ()=> {
         const url = `/listhotel?hotel-name=${hotelName}&city-name=${cityName}&price-min=${priceMin}&price-max=${priceMax}`;
         window.location.href = url;
     }
+
+    const handleSortChange = (e) => {
+        const selectedOption = e.target.value;
+        setSortOption(selectedOption);
+        sortHotels(selectedOption);
+    };
+
+    const sortHotels = (option) => {
+        let sortedHotels = [...hotels];
+        switch(option) {
+            case 'Price (Low to High)':
+                sortedHotels.sort((a, b) => a.price_min - b.price_min);
+                break;
+            case 'Price (High to Low)':
+                sortedHotels.sort((a, b) => b.price_min - a.price_min);
+                break;
+            case 'Rating (Low to High)':
+                sortedHotels.sort((a, b) => a.average_rating - b.average_rating);
+                break;
+            case 'Rating (High to Low)':
+                sortedHotels.sort((a, b) => b.average_rating - a.average_rating);
+                break;
+            default:
+                break;
+        }
+        setHotels(sortedHotels);
+    };
 
     return (
         <>
@@ -255,13 +280,18 @@ const ListHotel = ()=> {
                                     <h3><i class="sl sl-icon-direction"></i> Filters</h3>
                                     <div class="row with-forms">
                                         <div class="col-md-12">
-                                            <div class="utf_sort_by_select_item sort_by_margin" style={{ paddingTop: '20px', marginBottom: '0px' }}>
-                                                <select data-placeholder="Sort by Listing" class="utf_chosen_select_single" style={{ marginBottom: '0px' }}> 
+                                            <div className="utf_sort_by_select_item sort_by_margin" style={{ paddingTop: '20px', marginBottom: '0px' }}>
+                                                <select
+                                                    data-placeholder="Sort by Listing"
+                                                    className="utf_chosen_select_single"
+                                                    style={{ marginBottom: '0px' }}
+                                                    onChange={handleSortChange}
+                                                >
                                                     <option>Sort</option>
                                                     <option>Price (Low to High)</option>
                                                     <option>Price (High to Low)</option>
                                                     <option>Rating (Low to High)</option>
-                                                    <option>Rating (Low to High)</option>                  
+                                                    <option>Rating (High to Low)</option>
                                                 </select>
                                             </div>
                                         </div>
