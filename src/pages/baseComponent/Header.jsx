@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useRoomCount } from '../home/RoomCountContext/RoomCountContext';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -9,12 +8,15 @@ import { useLocation } from 'react-router-dom';
 const Header = () => {
     const [profileUser, setProfileUser] = useState({});
     const [inforUser, setInforUser] = useState({});
-    const [validToken, setValidToken] = useState(false); // Thêm state validToken
+    const [validToken, setValidToken] = useState(false);
     const { roomCount } = useRoomCount();
     const location = useLocation();
     const { setRoomCount } = useRoomCount();
     const baseURL = API_BASE_URL;
     const token = localStorage.getItem('accessToken');
+    const [imageUrl, setImageUrl] = useState(''); 
+
+    const defaultImage = 'https://demo-8000.nguyentanloc.top//media/user_11/11_Zxu1kwM.10813375.png'; 
 
     const handleScroll = (sectionId) => {
         window.location.href = `/`; 
@@ -26,7 +28,7 @@ const Header = () => {
         }, 500);
     };
 
-    useEffect (() => {
+    useEffect(() => {
         const fetchProfile = async () => {
             if (token) {
                 const URL = `${API_BASE_URL}/user/api/userauths/profile/`;
@@ -34,13 +36,19 @@ const Header = () => {
                     const response = await apiRequest(URL);
                     setProfileUser(response.data.profile);
                     setInforUser(response.data.user);
-                    setValidToken(true); // Đặt thành true nếu thành công
+                    setValidToken(true);
+                    // Kiểm tra ảnh
+                    const profileImageUrl = API_BASE_URL + response.data.profile.image;
+                    const img = new Image();
+                    img.src = profileImageUrl;
+                    img.onload = () => setImageUrl(profileImageUrl);
+                    img.onerror = () => setImageUrl(defaultImage);
                 } catch (err) {
                     console.error(err);
-                    setValidToken(false); // Đặt thành false nếu có lỗi
+                    setValidToken(false);
                 }
             } else {
-                setValidToken(false); // Nếu không có token, đặt validToken thành false
+                setValidToken(false);
             }
         };
 
@@ -64,7 +72,7 @@ const Header = () => {
         localStorage.removeItem('accessToken');
         window.location.href = redirectUrl;
     };
-
+    
     return (
         <>
             <header id="header_part" className="fullwidth">
@@ -82,14 +90,6 @@ const Header = () => {
                             <nav id="navigation" className="style_one">
                                 <ul id="responsive">
                                     <li><Link to="/" onClick={() => handleScroll('')}>Home</Link></li>
-                                    <li><a href="#">User Panel</a>
-                                        <ul>
-                                            <li><Link to="/user-profile/history-booking">My Bookings</Link></li>
-                                            <li><Link to="/user-profile/history-review">My Reviews</Link></li>
-                                            <li><Link to="/user-profile/my-profile">My Profile</Link></li>
-                                            <li><Link to="/user-profile/change-password">Change Password</Link></li>    
-                                        </ul>
-                                    </li>
                                     <li><a onClick={() => handleScroll('about-us')}>About Us</a></li>
                                     <li><a onClick={() => handleScroll('contact')}>Contact</a></li>
                                 </ul>
@@ -105,7 +105,7 @@ const Header = () => {
                                     <div className="utf_user_menu">
                                         <Link to={`/user-profile/my-profile`}>
                                             <div className="utf_user_name">
-                                                <span><img src={API_BASE_URL + profileUser.image} alt=""/></span>Hi, {inforUser.username}!
+                                                <span><img style={{marginLeft: '10px', height: '40px'}} src={imageUrl} alt="" /></span>Hi, {inforUser.username}!
                                             </div>
                                         </Link>
                                     </div>

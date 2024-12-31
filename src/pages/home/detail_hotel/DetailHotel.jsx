@@ -350,7 +350,7 @@ const DetailHotel = () => {
                             </div>
                             <div id="utf_listing_overview" class="utf_listing_section">
                                 <h3 class="utf_listing_headline_part margin-top-30 margin-bottom-30">Description</h3>
-                                <p>{detailHotel.description}</p>
+                                <div dangerouslySetInnerHTML={{ __html: detailHotel.description }} />
                                 <div id="utf_listing_tags" class="utf_listing_section listing_tags_section margin-bottom-10 margin-top-0">
                                     <a href="#"><i class="sl sl-icon-phone" aria-hidden="true"></i>(+84) {detailHotel.mobile}</a>
                                     <a href="#"><i class="fa fa-envelope-o" aria-hidden="true"></i> {detailHotel.slug}@gmail.com</a>
@@ -389,7 +389,7 @@ const DetailHotel = () => {
                                                 >
                                                     <h5>{roomType.type}<sub class="ppl-offer label-light-success">20% Off</sub></h5>
                                                     <p><strong>Max :</strong> {roomType.room_capacity} Persons</p>
-                                                    <span>${roomType.price}</span>
+                                                    <span style={{ backgroundColor: '#54ba1d', color: 'white'}}>${roomType.price}</span>
                                                 </li>
                                             ))}
                                         </ul>

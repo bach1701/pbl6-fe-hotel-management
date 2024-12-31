@@ -2,77 +2,124 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { useAuth } from './AuthContext';
 import API_BASE_URL from '../../config/apiConfig';
+import { apiRequest } from "../../utils/api";
+
 
 
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState(''); 
-  const [full_name, setFull_name] = useState('');
-  const [phone, setPhone] = useState('');
   const [username, setUsername] = useState('');
   const [message, setMessage] = useState('');
-  const { login, token } = useAuth();
   const navigate = useNavigate();
   const baseURL = API_BASE_URL;
 
   const handleLoginClick = () => {
     navigate('/login'); 
   };
+  
+    const handleSignup = async (e) => {
+        e.preventDefault();
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      setMessage('Passwords do not match');
-      Swal.fire({
-        icon: 'error',
-        title: 'Lỗi!',
-        text: 'Mật khẩu không trùng khớp.',
-        showConfirmButton: false,
-        timer: 1500
-    });
-      return;
-    }
-    try {
-      const response = await axios.post(
-        `${baseURL}/user/api/userauths/register/`,
-        {
-          email,
-          password,
-          full_name,
-          phone,
-          username,
+        if (username.length < 5 || username.length > 18) {
+            setMessage('*Username must be between 5 and 18 characters.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên người dùng phải có từ 5 đến 18 ký tự.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return;
         }
-      );
 
-      if (response.status === 201) {
-        setMessage('Register successful! Please log in to use our service!');
-        console.log('Register successful:', response.data);
-        login(response.data.access); 
-        Swal.fire({
-            icon: 'success',
-            title: 'Đăng ký thành công!',
-            text: 'Vui lòng đăng nhập vào hệ thống.',
-            showConfirmButton: false,
-            timer: 1500
-        });
-        navigate('/');
-      }
-    } catch (error) {
-      setMessage('Register failed');
-      console.error('Register failed:', error.response.data);
-      Swal.fire({
-        icon: 'error',
-        title: 'Đăng ký thất bại!',
-        text: 'Vui lòng kiểm tra lại.',
-        showConfirmButton: false,
-        timer: 1500
-    });
-    }
-  };
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setMessage('*Email is not valid.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Địa chỉ email không hợp lệ.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return;
+        }
 
+        if (password.length < 6 || password.length > 18) {
+            setMessage('*Password must be between 6 and 18 characters.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Mật khẩu phải có từ 6 đến 18 ký tự.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return;
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{6,18}$/;
+        if (!passwordRegex.test(password)) {
+            setMessage('*Password must contain at least one uppercase letter and one special character.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Mật khẩu phải bao gồm ít nhất một ký tự viết hoa và một ký tự đặc biệt.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setMessage('Passwords do not match.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Mật khẩu không trùng khớp.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                `${baseURL}/user/api/userauths/register/`,
+                {
+                    email,
+                    password,
+                    username,
+                }
+            );
+
+            if (response.status === 201) {
+                setMessage('Register successful! Please log in to use our service!');
+                console.log('Register successful:', response.data);
+                localStorage.setItem('accessToken', response.data.access); 
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Đăng ký thành công!',
+                    text: 'Vui lòng đăng nhập vào hệ thống.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                navigate('/');
+            }
+        } catch (error) {
+            setMessage('Register failed');
+            console.error('Register failed:', error.response.data);
+            Swal.fire({
+                icon: 'error',
+                title: 'Đăng ký thất bại!',
+                text: 'Vui lòng kiểm tra lại.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    };
         return (
             <div id="main_wrapper">
                 <header id="header_part" className="fullwidth">
@@ -123,16 +170,6 @@ const Register = () => {
                                                             </label>
                                                         </p>
                                                         <p className="utf_row_form utf_form_wide_block">
-                                                            <label htmlFor="phone2">
-                                                                <input type="text" className="input-text" name="email" id="phone2" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone" />
-                                                            </label>
-                                                        </p>
-                                                        <p className="utf_row_form utf_form_wide_block">
-                                                            <label htmlFor="fullname2">
-                                                                <input type="text" className="input-text" name="email" id="fullname2" value={full_name} onChange={(e) => setFull_name(e.target.value)} placeholder="Full Name" />
-                                                            </label>
-                                                        </p>
-                                                        <p className="utf_row_form utf_form_wide_block">
                                                             <label htmlFor="email2">
                                                                 <input type="text" className="input-text" name="email" id="email2" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
                                                             </label>
@@ -157,7 +194,7 @@ const Register = () => {
                                                         </p>
                                                         <input type="submit" className="button border fw margin-top-10" name="register" value="Register" />
                                                     </form>
-                                                    {message && <p>{message}</p>} 
+                                                    {message && <p style={{color: "red"}}>{message}</p>} 
                                                 </div>
                                             </div>
                                         </div>

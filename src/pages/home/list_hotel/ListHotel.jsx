@@ -232,7 +232,7 @@ const ListHotel = ()=> {
                                                         <div className="utf_star_rating_section" data-rating="4.5">
                                                             <div className="utf_counter_star_rating">({hotel.average_rating}) / ({hotel.review_count} Reviews)</div>
                                                         </div>
-                                                        <p>{hotel.description}</p>
+                                                        <div dangerouslySetInnerHTML={{ __html: hotel.description }} />
                                                         </div>
                                                     </div>
                                                     </Link>
