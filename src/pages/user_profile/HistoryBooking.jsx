@@ -30,7 +30,8 @@ const HistoryBooking = () => {
         navigate('/login');
         Swal.fire({
             icon: 'success',
-            title: 'Đăng xuất thành công!',
+            title: 'Success!',
+            text: 'Signed out successfully.',
             showConfirmButton: false,
             timer: 15000
         });

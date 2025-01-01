@@ -11,8 +11,6 @@ const ChangePassword = () => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-
-
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -20,8 +18,8 @@ const ChangePassword = () => {
         navigate('/login');
         Swal.fire({
             icon: 'success',
-            title: 'Thành công!',
-            title: 'Đăng xuất thành công!',
+            title: 'Success!',
+            text: 'Signed out successfully.',
             showConfirmButton: false,
             timer: 15000
         });
@@ -35,8 +33,8 @@ const ChangePassword = () => {
         }
         Swal.fire({
             icon: 'question',
-            title: 'Xác nhận đổi mật khẩu!',
-            text: 'Kiểm tra mật khẩu đã điền chính xác!',
+            title: 'Confirm!',
+            text: 'Check that the password has been filled in correctly.',
             showCancelButton: true, 
             confirmButtonText: 'Ok',
             cancelButtonText: 'Cancel'
@@ -45,8 +43,8 @@ const ChangePassword = () => {
                 if(newPassword !== confirmPassword) {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Lỗi!',
-                        text: 'Mật khẩu không trùng khớp.',
+                        title: 'Error!',
+                        text: 'Passwords do not match.',
                         showConfirmButton: false,
                         timer: 1500
                     });
@@ -58,8 +56,8 @@ const ChangePassword = () => {
                         console.log(response.data);
                         Swal.fire({
                             icon: 'success',
-                            title: 'Thành công!',
-                            text: 'Đổi mật khẩu thành công.',
+                            title: 'Success!',
+                            text: 'Password changed successfully.',
                             showConfirmButton: false,
                             timer: 1500
                         });
@@ -70,15 +68,15 @@ const ChangePassword = () => {
                             if (errorMessage === 'Incorrect old password.') {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Lỗi!',
-                                    text: 'Mật khẩu cũ không đúng.',
+                                    title: 'Error!',
+                                    text: 'The old password is incorrect.',
                                     showConfirmButton: false,
                                     timer: 1500
                                 });
                             } else {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Lỗi!',
+                                    title: 'Error!',
                                     text: errorMessage,
                                     showConfirmButton: false,
                                     timer: 1500
@@ -88,7 +86,7 @@ const ChangePassword = () => {
                     }
                 }
             } else {
-                console.log("Huỷ đổi mật khẩu.");
+                console.log("Cancel password change.");
             }
         })
     };

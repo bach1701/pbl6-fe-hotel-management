@@ -31,6 +31,21 @@ const Invoice = () => {
         }
     }
 
+    const formatDateToGMT7 = (dateString) => {
+        const date = new Date(dateString);
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZone: 'Asia/Ho_Chi_Minh', 
+            hour12: false
+        };
+        return date.toLocaleString('sv-SE', options).replace(' ', ' '); // Định dạng yyyy-mm-dd hh:mm:ss
+    };
+
     return (
         <>
             <div class="container mt-6 mb-7">
@@ -102,7 +117,7 @@ const Invoice = () => {
                                     </div>
                                     <div class="col-md-6 text-md-end">
                                     <div class="text-muted mb-2">Booking Date</div>
-                                    <strong>{dataInforBooking.date}</strong>
+                                    <strong>{formatDateToGMT7(dataInforBooking.date)}</strong>
                                     </div>
                                 </div>
                             </div>

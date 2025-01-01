@@ -37,8 +37,8 @@ const Index = ()=>{
             console.log(response.data);
             Swal.fire({
                 icon: 'success',
-                title: 'Thành công!',
-                text: 'Vui lòng chờ phản hồi qua email của bạn.',
+                title: 'Success!',
+                text: 'Please wait for a response by email.',
                 showConfirmButton: false,
                 timer: 2000
             })
@@ -47,8 +47,8 @@ const Index = ()=>{
         } catch (error) {
             Swal.fire({
                 icon: 'error',
-                title: 'Lỗi!',
-                text: 'Vui lòng kiểm tra lại email hoặc message.',
+                title: 'Error!',
+                text: 'Please check your email or message again.',
                 showConfirmButton: false,
                 timer: 2000
             })
@@ -100,7 +100,7 @@ const Index = ()=>{
         };
         if (token) {
             console.log('access token:', token);
-            fetchCartItemCount();
+            // fetchCartItemCount();
         }
         fetchHotels();
         fetchFeatureHotels();

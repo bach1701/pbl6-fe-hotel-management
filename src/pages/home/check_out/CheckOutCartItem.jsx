@@ -6,6 +6,7 @@ import { useRoomCount } from '../RoomCountContext/RoomCountContext';
 import API_BASE_URL from '../../../config/apiConfig';
 import { loadStripe } from '@stripe/stripe-js';
 import { apiRequest } from "../../../utils/api";
+import { useRoomDescriptions } from "../../baseComponent/RoomDescriptionContext/RoomDescriptionContext";
 
 
 const CheckOutCartItem = () => {
@@ -27,6 +28,8 @@ const CheckOutCartItem = () => {
     const checkoutDate = new Date(cartItemCheckout.check_out_date);
     const timeDifference = checkoutDate - checkinDate;
     const numberOfNights = timeDifference / (1000 * 3600 * 24);
+    const descriptions = useRoomDescriptions();
+    const [randomDescription, setRandomDescription] = useState('');
 
     const stripePromise = loadStripe('pk_test_51Q7TR2B1Dpb6dXWmD5g6dAuCHf5Co92kXqxZOI2yTOuC4lnZYSa6EGmYaZjAhfYVqMAXlPWft1HaIJT01qW29RVF0009iOraPk');
 
@@ -51,8 +54,8 @@ const CheckOutCartItem = () => {
         if (bookingID == '') {
             Swal.fire({
                 icon: 'error',
-                title: 'Lỗi!',
-                text: 'Vui lòng xác nhận thông tin đặt phòng.',
+                title: 'Error!',
+                text: 'Please confirm booking information before using the coupon.',
                 showConfirmButton: false,
                 timer: 2000
             });
@@ -67,8 +70,8 @@ const CheckOutCartItem = () => {
                 if(response.data.message === 'Coupon activated') {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Thành công!',
-                        text: 'Sử dụng coupon thành công.',
+                        title: 'Success!',
+                        text: 'Use coupon successfully.',
                         showConfirmButton: false,
                         timer: 2000
                     })
@@ -79,8 +82,8 @@ const CheckOutCartItem = () => {
                 else (
                     Swal.fire({
                         icon: 'error',
-                        title: 'Lỗi!',
-                        text: 'Coupon không tồn tại.',
+                        title: 'Error!',
+                        text: 'Coupon does not exist.',
                         showConfirmButton: false,
                         timer: 2000
                     })
@@ -93,7 +96,7 @@ const CheckOutCartItem = () => {
                 : error.message; 
                 Swal.fire({
                     icon: 'error',
-                    title: 'Lỗi!',
+                    title: 'Error!',
                     text: errorMessage,
                     showConfirmButton: false,
                     timer: 2000
@@ -144,6 +147,8 @@ const CheckOutCartItem = () => {
 
     const handleRoomClick = (slugHotel, slugRoomtype) => {
         fetchTypeRoom(slugHotel, slugRoomtype);
+        const randomIndex = Math.floor(Math.random() * descriptions.length);
+        setRandomDescription(descriptions[randomIndex]);
     };
 
     const handleCloseModal = () => {
@@ -172,16 +177,16 @@ const CheckOutCartItem = () => {
         if (fullName === "" || email === "" || phoneNumber === "") {
             Swal.fire({
                 icon: 'error',
-                title: 'Lỗi!',
-                text: 'Vui lòng nhập đầy đủ thông tin đặt phòng.',
+                title: 'Errir!',
+                text: 'Please enter complete booking information.',
                 showConfirmButton: false,
                 timer: 2000
             });
         } else {
             Swal.fire({
                 icon: 'question',
-                title: 'Xác nhận!',
-                text: 'Kiểm tra thông tin đã điền chính xác!',
+                title: 'Confirm!',
+                text: 'Check the information is filled in correctly.',
                 showCancelButton: true,
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel'
@@ -197,8 +202,8 @@ const CheckOutCartItem = () => {
                     console.log(isClickConfirmInfor, "isClickConfirmInfor set to true");
                     Swal.fire({
                         icon: 'success',
-                        title: 'Thành công!',
-                        text: 'Tạo booking thành công.',
+                        title: 'Success!',
+                        text: 'Successfully created booking.',
                         showConfirmButton: false,
                         timer: 2000
                     })
@@ -218,8 +223,8 @@ const CheckOutCartItem = () => {
         } else {
             Swal.fire({
                 icon: 'warning',
-                title: 'Cảnh báo!',
-                text: 'Bạn chưa nhập Coupon.',
+                title: 'Waring!',
+                text: 'You have not entered Coupon yet.',
                 showConfirmButton: false,
                 timer: 2000
             });
@@ -237,8 +242,8 @@ const CheckOutCartItem = () => {
         if (bookingID == '') {
             Swal.fire({
                 icon: 'error',
-                title: 'Lỗi!',
-                text: 'Vui lòng xác nhận thông tin đặt phòng.',
+                title: 'Error!',
+                text: 'Please confirm booking information before payment.',
                 showConfirmButton: false,
                 timer: 2000
             });
@@ -437,7 +442,7 @@ const CheckOutCartItem = () => {
                                                 <p><strong>Price:</strong> ${selectedRoom.price}</p>
                                             </div>
                                             <div style={{ flex: '0 0 48%', marginBottom: '10px' }}>
-                                                <p><strong>Description:</strong> {selectedRoom.description}</p>
+                                                <p><strong>Description:</strong> {randomDescription || "Click to get a description!"}</p>
                                             </div>
                                             <div style={{ flex: '0 0 48%', marginBottom: '10px' }}>
                                                 <p><strong>Number of Beds:</strong> {selectedRoom.number_of_beds}</p>

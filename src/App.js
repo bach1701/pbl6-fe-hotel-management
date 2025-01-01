@@ -23,10 +23,12 @@ import Footer from "./pages/baseComponent/Footer";
 import { useLocation } from "react-router-dom";
 import MainLayout from "./pages/baseComponent/MainLayout";
 import LayoutNonFooter from "./pages/baseComponent/LayoutNonFooter";
+import { RoomDescriptionProvider } from "./pages/baseComponent/RoomDescriptionContext/RoomDescriptionContext";
 
 export default function App() {
   return (
     <RoomCountProvider>
+      <RoomDescriptionProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainLayout><Home /></MainLayout>} />
@@ -49,6 +51,7 @@ export default function App() {
                     <Route path="*" element={<div>404 Not Found</div>} /> 
         </Routes>
       </BrowserRouter>
+      </RoomDescriptionProvider>
     </RoomCountProvider>
   );
 }

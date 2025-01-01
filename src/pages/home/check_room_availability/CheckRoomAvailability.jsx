@@ -66,14 +66,14 @@ const CheckRoomAvailability = () => {
                 setListRoomTypes(responseListRoomType.data.roomtype)
             } catch (error) {
                 if (error.response) {
-                    const errorMessage = error.response.data.message || 'Có lỗi xảy ra.';
+                    const errorMessage = error.response.data.message || 'An error occurred.';
                     if (errorMessage === 'No rooms available for the selected criteria.') {
-                        alert('Không có phòng phù hợp với tiêu chí đã chọn.'); 
+                        alert('There are no rooms matching the selected criteria.'); 
                     } else {
                         alert(errorMessage); 
                     }
                 } else {
-                    alert('Không thể kết nối tới server.');
+                    alert('Unable to connect to server.');
                 }
                 setError(error);
             }
@@ -137,8 +137,8 @@ const CheckRoomAvailability = () => {
             setCheckin('');
             Swal.fire({
                 icon: 'error',
-                title: 'Ngày Check in không hợp lệ!',
-                text: ' Bạn vui lòng nhập lại ngày Check in',
+                title: 'Error!',
+                text: ' Check-in date is invalid.',
                 showConfirmButton: false,
                 timer: 3000
             })
@@ -154,8 +154,8 @@ const CheckRoomAvailability = () => {
             setCheckout('');
             Swal.fire({
                 icon: 'error',
-                title: 'Ngày Checkout không hợp lệ!',
-                text: ' Bạn vui lòng nhập lại ngày Check out',
+                title: 'Error!',
+                text: ' Check-out date is invalid.',
                 showConfirmButton: false,
                 timer: 3000
             })
@@ -190,7 +190,7 @@ const CheckRoomAvailability = () => {
                         : error.message;
                         Swal.fire({
                             icon: 'error',
-                            title: 'Lỗi!',
+                            title: 'Error!',
                             text: errorMessage,
                             showConfirmButton: false,
                             timer: 3000
@@ -199,8 +199,8 @@ const CheckRoomAvailability = () => {
                         console.error('There was an error!', error);
                         Swal.fire({
                             icon: 'error',
-                            title: 'Lỗi!',
-                            text: 'Không thể kết nối tới server.',
+                            title: 'Error!',
+                            text: 'Unable to connect to server.',
                             showConfirmButton: false,
                             timer: 3000
                         });
@@ -209,8 +209,8 @@ const CheckRoomAvailability = () => {
             } else {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Nhập thiếu thông tin!',
-                    text: 'Vui lòng nhập đầy đủ các thông tin cần để kiểm tra phòng trống',
+                    title: 'Error!',
+                    text: 'Enter missing information.',
                     showConfirmButton: false,
                     timer: 2000
                 });
@@ -218,8 +218,8 @@ const CheckRoomAvailability = () => {
         } else {
             Swal.fire({
                 icon: 'error',
-                title: 'Ngày Checkout không hợp lệ!',
-                text: 'Bạn vui lòng nhập lại ngày Check out',
+                title: 'Error!',
+                text: 'Check-out date is invalid.',
                 showConfirmButton: false,
                 timer: 3000
             });
@@ -240,8 +240,8 @@ const CheckRoomAvailability = () => {
             const response = await apiRequest(URL, 'POST', data);
             Swal.fire({
                 icon: 'success',
-                title: 'Thành công!',
-                text: 'Bạn đã thêm vào giỏ hàng.',
+                title: 'Success!',
+                text: 'You have added to cart.',
                 showConfirmButton: false,
                 timer: 3000
             })
@@ -255,9 +255,9 @@ const CheckRoomAvailability = () => {
                     localStorage.setItem('redirectUrl', window.location.pathname + window.location.search);
                     Swal.fire({
                         icon: 'error',
-                        title: 'Lỗi!',
-                        text: 'Bạn cần đăng nhập để thực hiện hành động này.',
-                        confirmButtonText: 'Đăng nhập',
+                        title: 'Error!',
+                        text: 'You need to be logged in to perform this action.',
+                        confirmButtonText: 'Login',
                     }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = '/login'; 
@@ -266,8 +266,8 @@ const CheckRoomAvailability = () => {
                 } else if (error.response.data.error) {
                     Swal.fire({
                         icon: 'error',
-                        title: "Lỗi!",
-                        text: 'Ngày đặt phòng trùng trong giỏ hàng!',
+                        title: "Error!",
+                        text: 'Same booking date in cart.',
                         showConfirmButton: false,
                         timer: 3000
                     });

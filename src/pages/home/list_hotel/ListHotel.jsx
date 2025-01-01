@@ -108,7 +108,7 @@ const ListHotel = ()=> {
                 : error.message;
                 Swal.fire({
                     icon: 'error',
-                    title: 'Lỗi!',
+                    title: 'Error!',
                     text: errorMessage,
                     showConfirmButton: false,
                     timer: 3000

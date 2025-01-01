@@ -42,7 +42,8 @@ const ProfilePage = () => {
         navigate('/login');
         Swal.fire({
             icon: 'success',
-            title: 'Đăng xuất thành công!',
+            title: 'Success!',
+            text: 'Signed out successfully.',
             showConfirmButton: false,
             timer: 15000
         });
@@ -65,8 +66,8 @@ const ProfilePage = () => {
     const handleSaveChanges = async () => {
         Swal.fire({
             icon: 'question',
-            title: 'Xác nhận thay đổi thông tin!',
-            text: 'Kiểm tra thông tin đã điền chính xác!',
+            title: 'Confirm!',
+            text: 'Check that the information you have filled in is correct.',
             showCancelButton: true, 
             confirmButtonText: 'Ok',
             cancelButtonText: 'Cancel'
@@ -95,8 +96,8 @@ const ProfilePage = () => {
     
                     Swal.fire({
                         icon: 'success',
-                        title: 'Thành công!',
-                        text: 'Thông tin cá nhân đã được cập nhật!',
+                        title: 'Success!',
+                        text: 'Personal information has been updated.',
                         showConfirmButton: false,
                         timer: 2000
                     }).then(() => {

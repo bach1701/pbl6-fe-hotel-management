@@ -51,8 +51,8 @@ const Login = () => {
                 }
                 Swal.fire({
                     icon: 'success',
-                    title: 'Đăng nhập thành công!',
-                    text: 'Bạn đã đăng nhập vào hệ thống.',
+                    title: 'Success!',
+                    text: 'Log in successfully.',
                     showConfirmButton: false,
                     timer: 1500
                 });
@@ -62,8 +62,8 @@ const Login = () => {
             console.error('Login failed:', error.response.data);
             Swal.fire({
                 icon: 'error',
-                title: 'Đăng nhập thất bại!',
-                text: 'Vui lòng kiểm tra lại.',
+                title: 'Error!',
+                text: 'Login failed.',
                 showConfirmButton: false,
                 timer: 1500
             });
@@ -128,10 +128,6 @@ const Login = () => {
                                                         <span className="lost_password fl_left">
                                                             <a href="/forgot-password">Forgot Password?</a>
                                                         </span>
-                                                        {/* <div className="checkboxes fl_right">
-                                                            <input id="remember-me" type="checkbox" name="check" />
-                                                            <label htmlFor="remember-me">Remember Me</label>
-                                                        </div> */}
                                                     </div>
                                                     <div className="utf_row_form">
                                                         <input type="submit" className="button border margin-top-5" name="login" value="Login" />

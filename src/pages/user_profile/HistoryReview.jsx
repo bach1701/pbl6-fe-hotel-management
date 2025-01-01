@@ -46,8 +46,8 @@ const HistoryReview = () => {
             fetchMyReviews();
             Swal.fire({
                 icon: 'success',
-                title: 'Thành công!',
-                text: 'Bạn đã xoá review thành công!',
+                title: 'Success!',
+                text: 'You have successfully deleted the review.',
                 timer: 2000,
                 showConfirmButton: false,
             })
@@ -62,7 +62,8 @@ const HistoryReview = () => {
         navigate('/login');
         Swal.fire({
             icon: 'success',
-            title: 'Đăng xuất thành công!',
+            title: 'Success!',
+            text: 'Signed out successfully.',
             showConfirmButton: false,
             timer: 15000
         });

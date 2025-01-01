@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useRoomCount } from '../RoomCountContext/RoomCountContext';
 import API_BASE_URL from '../../../config/apiConfig';
 import { apiRequest } from '../../../utils/api';
-
+import { useRoomDescriptions } from "../../baseComponent/RoomDescriptionContext/RoomDescriptionContext";
 
 
 const SelectedRoom = () => {
@@ -15,6 +15,8 @@ const SelectedRoom = () => {
     const { setRoomCount } = useRoomCount();
     const baseURL = API_BASE_URL;
     const navigate = useNavigate();
+    const descriptions = useRoomDescriptions();
+    const [randomDescription, setRandomDescription] = useState('');
 
 
     const fetchCart = async() => {
@@ -40,11 +42,11 @@ const SelectedRoom = () => {
     
         const result = await Swal.fire({
             icon: 'question',
-            title: 'Xác nhận!',
-            text: 'Xác nhận xoá phòng khỏi danh sách?',
+            title: 'Cofirm!',
+            text: 'Confirm deletion of room from list?',
             showCancelButton: true,
-            confirmButtonText: 'Xác nhận',
-            cancelButtonText: 'Huỷ'
+            confirmButtonText: 'Ok',
+            cancelButtonText: 'Cancel'
         });
     
         if (result.isConfirmed) {
@@ -53,8 +55,8 @@ const SelectedRoom = () => {
                 fetchCart(); 
                 Swal.fire({
                     icon: 'success',
-                    title: 'Thành công!',
-                    text: 'Xoá thành công.',
+                    title: 'Success!',
+                    text: 'Deleted successfully.',
                     showConfirmButton: false,
                     timer: 2000
                 });
@@ -62,14 +64,14 @@ const SelectedRoom = () => {
                 console.error(error);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Có lỗi xảy ra!',
-                    text: 'Không thể xoá phòng.',
+                    title: 'Error!',
+                    text: 'Room cannot be deleted.',
                     showConfirmButton: false,
                     timer: 2000
                 });
             }
         } else {
-            console.log("Đã hủy tác vụ xoá phòng khỏi danh sách.");
+            console.log("Canceled the action to remove a room from the list.");
         }
     };
 
@@ -96,9 +98,9 @@ const SelectedRoom = () => {
     }
 
     const handleRoomClick = (slugHotel, slugRoomtype) => {
-        console.log('11click!!!');
-
         fetchTypeRoom(slugHotel, slugRoomtype);
+        const randomIndex = Math.floor(Math.random() * descriptions.length);
+        setRandomDescription(descriptions[randomIndex]);
     };
 
     const handleCloseModal = () => {
@@ -131,11 +133,11 @@ const SelectedRoom = () => {
     
             Swal.fire({
                 icon: 'error',
-                title: 'Lỗi!',
+                title: 'Error!',
                 text: errorMessage,
                 html: `${errorMessage}
                 <br> <br> <b>
-               Bạn có muốn xoá ra khỏi danh sách chờ đặt không?`,
+                Do you want to be removed from the waiting list?`,
                showCancelButton: true,
                confirmButtonText: 'OK',
                cancelButtonText: 'Cancel'
@@ -144,7 +146,7 @@ const SelectedRoom = () => {
                     deleteCartItem(cartItemId);
                 }
                 else {
-                    console.log("Huỷ xoá phòng chờ.");
+                    console.log("Delegate the waiting room.");
                 }
             })
         }
@@ -190,8 +192,7 @@ const SelectedRoom = () => {
                                                                     onClick={() => handleRoomClick(hotel.hotel_slug, room.slug_room_type)} 
                                                                     style={{ 
                                                                         cursor: 'pointer', 
-                                                                        textDecoration: 'underline', 
-                                                                        // color: 'red'  
+                                                                        textDecoration: 'underline'
                                                                     }}
                                                                 >
                                                                     <strong>View detail Type Room</strong>
@@ -215,7 +216,7 @@ const SelectedRoom = () => {
                                                                     const dayDifference = timeDifference / (1000 * 3600 * 24); // Chuyển đổi từ milliseconds sang ngày
                                                                     const totalPrice = room.price * dayDifference; 
 
-                                                                    return <span>{dayDifference} x ${room.price}</span>;
+                                                                    return <span style={{ backgroundColor: '#54ba1d', color: 'white'}}>{dayDifference} x ${room.price}</span>;
                                                                 })()}
                                                             </li>
                                                         </>
@@ -246,7 +247,7 @@ const SelectedRoom = () => {
                                                 <p><strong>Price:</strong> {selectedRoom.price} VNĐ</p>
                                             </div>
                                             <div style={{ flex: '0 0 48%', marginBottom: '10px' }}>
-                                                <p><strong>Description:</strong> {selectedRoom.description}</p>
+                                                <p><strong>Description:</strong> {randomDescription || "Click to get a description!"}</p>
                                             </div>
                                             <div style={{ flex: '0 0 48%', marginBottom: '10px' }}>
                                                 <p><strong>Number of Beds:</strong> {selectedRoom.number_of_beds}</p>

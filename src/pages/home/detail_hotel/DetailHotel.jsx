@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import API_BASE_URL from '../../../config/apiConfig';
 import Slideshow from "../../baseComponent/slide-show/Slideshow";
+import { useRoomDescriptions } from "../../baseComponent/RoomDescriptionContext/RoomDescriptionContext";
+
 
 const DetailHotel = () => {
     
@@ -33,6 +35,8 @@ const DetailHotel = () => {
     const [inforReceptionist, setInforReceptionist] = useState({});
     const [publicCoupon, setPublicCoupon] = useState([]);
     const [currentReviewPage, setCurrentReviewPage] = useState(1);
+    const descriptions = useRoomDescriptions();
+    const [randomDescription, setRandomDescription] = useState('');
 
     const reviewsPerPage = 2;
     const totalReviewPages = Math.ceil(listHotelReviews.length / reviewsPerPage);
@@ -63,8 +67,8 @@ const DetailHotel = () => {
             setCheckin('');
             Swal.fire({
                 icon: 'error',
-                title: 'Lỗi!',
-                text: 'Ngày Checkin không hợp lệ.',
+                title: 'Error!',
+                text: 'Checkin date is invalid.',
                 showConfirmButton: false,
                 timer: 3000
             })
@@ -81,8 +85,8 @@ const DetailHotel = () => {
             setCheckout('');
             Swal.fire({
                 icon: 'error',
-                title: 'Lỗi!',
-                text: 'Ngày Checkout không hợp lệ.',
+                title: 'Error!',
+                text: 'Checkout date is invalid.',
                 showConfirmButton: false,
                 timer: 3000
             })
@@ -92,8 +96,8 @@ const DetailHotel = () => {
                 setCheckout('');
                 Swal.fire({
                     icon: 'error',
-                    title: 'Lỗi!',
-                    text: 'Ngày Checkout không hợp lệ.',
+                    title: 'Error!',
+                    text: 'Checkout date is invalid.',
                     showConfirmButton: false,
                     timer: 3000
                 })
@@ -133,7 +137,7 @@ const DetailHotel = () => {
                         : error.message;
                         Swal.fire({
                             icon: 'error',
-                            title: 'Lỗi!',
+                            title: 'Error!',
                             text: errorMessage,
                             showConfirmButton: false,
                             timer: 3000
@@ -142,8 +146,8 @@ const DetailHotel = () => {
                         console.error('There was an error!', error);
                         Swal.fire({
                             icon: 'error',
-                            title: 'Lỗi!',
-                            text: 'Không thể kết nối tới server.',
+                            title: 'Error!',
+                            text: 'Unable to connect to server.',
                             showConfirmButton: false,
                             timer: 3000
                         });
@@ -152,8 +156,8 @@ const DetailHotel = () => {
             } else {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Nhập thiếu thông tin!',
-                    text: 'Vui lòng nhập đầy đủ các thông tin cần để kiểm tra phòng trống',
+                    title: 'Error!',
+                    text: 'Enter missing information.',
                     showConfirmButton: false,
                     timer: 2000
                 });
@@ -161,8 +165,8 @@ const DetailHotel = () => {
         } else {
             Swal.fire({
                 icon: 'error',
-                title: 'Ngày Checkout không hợp lệ!',
-                text: 'Bạn vui lòng nhập lại ngày Check out',
+                title: 'Error!',
+                text: 'Checkout date is invalid.',
                 showConfirmButton: false,
                 timer: 3000
             });
@@ -231,9 +235,11 @@ const DetailHotel = () => {
             console.log(err);
         }
     }
-
+    
     const handleRoomClick = (roomType) => {
         setSelectedRoom(roomType);
+        const randomIndex = Math.floor(Math.random() * descriptions.length);
+        setRandomDescription(descriptions[randomIndex]);
     };
 
     const handleCloseModal = () => {
@@ -275,8 +281,8 @@ const DetailHotel = () => {
             });
             Swal.fire({
                 icon: 'success',
-                title: 'Thành công!',
-                text: 'Viết đánh giá thành công.',
+                title: 'Success!',
+                text: 'Write a successful review.',
                 showConfirmButton: false,
                 timer: 2000
             })
@@ -312,9 +318,21 @@ const DetailHotel = () => {
         const url = window.location.href;
     
         navigator.clipboard.writeText(url).then(() => {
-          alert('URL đã được sao chép vào clipboard!');
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'The URL has been copied to the clipboard!',
+                showConfirmButton: false,
+                timer: 2000
+            })
         }).catch(err => {
-          console.error('Không thể sao chép URL: ', err);
+            Swal.fire({
+                icon: 'error',
+                title: 'error!',
+                text: 'URL was not copied to clipboard!',
+                showConfirmButton: false,
+                timer: 2000
+            })
         });
     };
 
@@ -416,7 +434,7 @@ const DetailHotel = () => {
                                                 <p><strong>Price:</strong>${selectedRoom.price}</p>
                                             </div>
                                             <div style={{ flex: '0 0 48%', marginBottom: '10px' }}>
-                                                <p><strong>Description:</strong> {selectedRoom.description}</p>
+                                                <p><strong>Description:</strong> {randomDescription || "Click to get a description!"}</p>
                                             </div>
                                             <div style={{ flex: '0 0 48%', marginBottom: '10px' }}>
                                                 <p><strong>Number of Beds:</strong> {selectedRoom.number_of_beds}</p>
