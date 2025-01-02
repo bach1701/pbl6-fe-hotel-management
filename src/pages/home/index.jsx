@@ -138,6 +138,48 @@ const Index = ()=>{
                 </div>
             </div>
 
+            <section class="fullwidth_block margin-top-65 padding-top-75 padding-bottom-70" data-background-color="#f9f9f9">
+                <div class="container">
+                    <div class="row slick_carousel_slider">
+                        <div class="col-md-12">
+                            <h3 class="headline_part centered margin-bottom-45">Our Popular Hotels<span>Explore great hotel with Travel-PBL6!</span> </h3>
+                        </div>
+                        <div class="row">     
+                            <div class="col-md-12">
+                                <div class="simple_slick_carousel_block utf_dots_nav">
+                                    <ul className="hotels-list">
+                                        {featureHotels.map(hotel=>(
+                                            <li>
+                                                <div class="utf_carousel_item" style={{marginTop: '10px'}}>
+                                                    <Link to={`/detailhotel/${hotel.slug}`} class="utf_listing_item-container compact">
+                                                        <div class="utf_listing_item"> <img src={hotel.hotel_gallery[1].image} alt=""/>
+                                                            <span class="utf_open_now">Open Now</span>
+                                                            <div class="utf_listing_item_content">
+                                                                <div class="utf_listing_prige_block">
+                                                                    <span class="utf_meta_listing_price"><i class="fa fa-tag"></i> ${hotel.price_min} - ${hotel.price_max}</span>
+                                                                    <span class="utp_approve_item"><i class="utf_approve_listing"></i></span>
+                                                                </div>
+                                                                <h3>{hotel.name}</h3>
+                                                                <span><i class="fa fa-map-marker"></i>{hotel.address}</span>
+                                                                <span><i class="fa fa-phone"></i>{hotel.mobile}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="utf_star_rating_section" data-rating="4.5">
+                                                            <div class="utf_counter_star_rating">({hotel.average_rating.toFixed(1)}) / ({hotel.review_count} Reviews)</div>
+                                                            <span class="like-icon"></span>
+                                                        </div>
+                                                    </Link>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <div class="fullwidth_block search_categorie_block">
                 <div class="container">
                     <div class="row">
@@ -237,7 +279,7 @@ const Index = ()=>{
             </div>
             <div class="clearfix"></div>
 
-            <section class="fullwidth_block margin-top-65 padding-top-75 padding-bottom-70" data-background-color="#f9f9f9">
+            {/* <section class="fullwidth_block margin-top-65 padding-top-75 padding-bottom-70" data-background-color="#f9f9f9">
                 <div class="container">
                     <div class="row slick_carousel_slider">
                         <div class="col-md-12">
@@ -264,7 +306,7 @@ const Index = ()=>{
                                                             </div>
                                                         </div>
                                                         <div class="utf_star_rating_section" data-rating="4.5">
-                                                            <div class="utf_counter_star_rating">({hotel.average_rating}) / ({hotel.review_count} Reviews)</div>
+                                                            <div class="utf_counter_star_rating">({hotel.average_rating.toFixed(1)}) / ({hotel.review_count} Reviews)</div>
                                                             <span class="like-icon"></span>
                                                         </div>
                                                     </Link>
@@ -277,7 +319,7 @@ const Index = ()=>{
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             <section class="fullwidth_block padding-top-75 padding-bottom-75" data-background-color="#ffffff">
                 <div class="container">

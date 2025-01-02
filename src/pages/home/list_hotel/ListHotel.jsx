@@ -230,7 +230,7 @@ const ListHotel = ()=> {
                                                         <span><i className="fa fa-map-marker"></i>{hotel.address}</span>
                                                         <span><i className="fa fa-phone"></i>{hotel.mobile}</span>
                                                         <div className="utf_star_rating_section" data-rating="4.5">
-                                                            <div className="utf_counter_star_rating">({hotel.average_rating}) / ({hotel.review_count} Reviews)</div>
+                                                            <div className="utf_counter_star_rating">({hotel.average_rating.toFixed(1)}) / ({hotel.review_count} Reviews)</div>
                                                         </div>
                                                         <div dangerouslySetInnerHTML={{ __html: hotel.description }} />
                                                         </div>
