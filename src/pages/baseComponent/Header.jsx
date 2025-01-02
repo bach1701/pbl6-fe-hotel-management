@@ -25,7 +25,7 @@ const Header = () => {
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
             }
-        }, 100); 
+        }, 250); 
     };
 
     const handleHomeClick = () => {
