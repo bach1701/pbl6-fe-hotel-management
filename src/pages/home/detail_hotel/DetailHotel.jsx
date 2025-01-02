@@ -293,6 +293,13 @@ const DetailHotel = () => {
         }
         catch (error) {
             console.log(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'You need to be logged in to perform this action.',
+                showConfirmButton: false,
+                timer: 2000
+            })
         }
     }
 

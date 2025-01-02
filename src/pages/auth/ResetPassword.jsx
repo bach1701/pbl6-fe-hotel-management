@@ -128,7 +128,7 @@ const ForgotPassword = () => {
                                 <div className="col-md-6 col-sm-6 col-xs-12">
                                     <div className="category_container_item_part">
                                         <a href="/" className="category_item_box"> 
-                                            <img src="images/logo-booking-hotel.png" style={{width: '100%', height: '420px'}} alt=""/>
+                                            <img src="https://demo-8000.nguyentanloc.top//media/user_11/11.logo-web.png" style={{width: '100%', height: '420px'}} alt=""/>
                                             <div className="category_content_box_part">
                                                 <h3>Move to Home</h3>
                                                 <span>To enjoy more features</span> 
